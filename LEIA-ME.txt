@@ -1,0 +1,28 @@
+CORREÇÃO DE DEPENDÊNCIAS DO PESABOI NO RENDER
+
+O log mostrou:
+ModuleNotFoundError: No module named 'morphometry'
+
+O server.py importa dois módulos Python que precisam estar no MESMO nível
+(pasta raiz) que server.py:
+  - morphometry.py
+  - hybrid_weighing.py
+
+COMO APLICAR:
+1. Extraia este ZIP no computador.
+2. Abra o repositório GitHub costavini0714-ship-it/Pesaboi.
+3. Na página principal do repositório, clique em Add file > Upload files.
+4. Envie morphometry.py e hybrid_weighing.py diretamente para a raiz do repositório.
+   NÃO envie os dois arquivos dentro de uma subpasta.
+5. Clique em Commit changes.
+6. O Auto-Deploy do Render deve iniciar. Se não iniciar, vá em Deploys > Manual Deploy
+   > Deploy latest commit.
+
+MANTENHA o Start Command:
+  python server.py
+
+MANTENHA o Build Command:
+  pip install -r requirements.txt
+
+O requirements.txt não precisa de pacotes adicionais: os módulos usam somente
+biblioteca padrão do Python.
