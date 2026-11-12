@@ -1,0 +1,2 @@
+# O backend do PesaBoi usa somente a biblioteca padrão do Python.
+# Não há pacotes externos obrigatórios para instalar no Render.
