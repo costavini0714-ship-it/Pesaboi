@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#20394a">
+  <meta name="description" content="PesaBoi: análise visual automática de bovinos e estimativa matemática experimental.">
+  <title>PesaBoi | Gestão do rebanho</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23123d2a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='60'%3E🐂%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css?v=3.11">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#inicio" data-go="home" aria-label="PesaBoi - Início">
+      <span class="brand-mark" aria-hidden="true">🐂</span>
+      <span class="brand-copy"><strong>PESA<span>BOI</span></strong><small>Gestão inteligente do rebanho</small></span>
+    </a>
+    <div class="topbar-right">
+      <span id="headerFarm" class="header-farm hidden"></span>
+      <button id="logout" class="text-button hidden" type="button">Sair da conta ↗</button>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section id="login" class="screen login-screen">
+      <div class="login-intro">
+        <span class="eyebrow">CONTROLE DO REBANHO</span>
+        <h1>Bem-vindo ao <span>PesaBoi</span></h1>
+        <p>Fotografe seus bovinos, veja pré-estimativas visuais e mantenha cada ficha organizada.</p>
+      </div>
+      <form id="register" class="panel form-panel">
+        <div class="section-title"><span class="section-icon">♙</span><div><h2>Cadastro da propriedade</h2><p>Seus registros ficam separados neste dispositivo.</p></div></div>
+        <label for="owner">Seu nome <em>*</em></label>
+        <input id="owner" name="owner" required autocomplete="name" placeholder="Nome completo">
+        <div class="form-grid">
+          <div><label for="email">E-mail <small>(opcional)</small></label><input id="email" name="email" type="email" autocomplete="email" placeholder="seu@email.com"></div>
+          <div><label for="phone">Telefone <small>(opcional)</small></label><input id="phone" name="phone" autocomplete="tel" placeholder="(00) 00000-0000"></div>
+        </div>
+        <label for="farm">Nome da fazenda ou propriedade</label>
+        <input id="farm" name="farm" placeholder="Minha Fazenda">
+        <button class="primary-button full-width" type="submit">Entrar no PesaBoi <span>→</span></button>
+        <p class="form-note">Somente o nome é obrigatório. E-mail e telefone são opcionais.</p>
+      </form>
+    </section>
+
+    <section id="home" class="screen hidden">
+      <div class="home-heading">
+        <div><span class="eyebrow">PROPRIEDADE</span><h1 id="farmTitle">Minha Fazenda</h1><p id="hello">Organize os registros do seu rebanho.</p></div>
+      </div>
+
+      <div class="home-layout">
+        <button id="openCamera" class="home-tile camera-tile" type="button">
+          <span class="tile-icon camera-icon" aria-hidden="true">🐂</span>
+          <strong>CÂMERA</strong>
+          <small>Fotografar e cadastrar um bovino</small>
+          <span class="tile-arrow" aria-hidden="true">→</span>
+        </button>
+        <div class="home-side">
+          <button id="openDatabase" class="home-tile database-tile" type="button">
+            <span class="tile-icon database-icon" aria-hidden="true">▤</span>
+            <strong>BANCO DE DADOS</strong>
+            <small>Fichas dos bois e estimativas</small>
+            <span id="animalCount" class="count-badge">0 animais</span>
+            <span class="tile-arrow" aria-hidden="true">→</span>
+          </button>
+          <section class="home-tile last-tile" aria-labelledby="lastTitle">
+            <div class="last-top"><span class="eyebrow" id="lastTitle">ÚLTIMA PESAGEM</span><span class="scale-icon" aria-hidden="true">⚖</span></div>
+            <h2 id="lastName">Nenhum animal analisado</h2>
+            <div class="last-weight"><strong id="lastWeight">--</strong><span>kg</span></div>
+            <p id="lastDate">Faça a primeira análise pela câmera.</p>
+            <button id="viewLast" class="inline-link" type="button" disabled>Ver relatório <span>→</span></button>
+          </section>
+        </div>
+      </div>
+      <p class="home-note">O PesaBoi calcula com medidas corporais estimadas; compare os resultados com uma balança para validar a precisão.</p>
+
+      <section class="premium-card" aria-labelledby="premiumTitle">
+        <div class="premium-card-copy">
+          <span class="eyebrow">PESABOI PREMIUM</span>
+          <h2 id="premiumTitle">Uma experiência sem anúncios</h2>
+          <p>O plano Premium está sendo preparado. A assinatura só será liberada quando o pagamento e a confirmação segura do acesso estiverem conectados.</p>
+        </div>
+        <span class="premium-status" id="premiumStatus">EM CONFIGURAÇÃO</span>
+        <button id="premiumAction" class="premium-action" type="button" disabled>Premium em breve</button>
+      </section>
+
+      <aside id="homeAdPlacement" class="ad-placement hidden" aria-label="Publicidade">
+        <span class="ad-disclosure">ANÚNCIO</span>
+        <div id="homeAdSlot" class="ad-slot"></div>
+      </aside>
+    </section>
+
+    <section id="database" class="screen hidden">
+      <div class="page-heading"><button class="back-button" data-go="home" aria-label="Voltar">←</button><div><h1>Banco de dados</h1><p id="databaseCount">0 animais cadastrados</p></div></div>
+      <div class="database-toolbar">
+        <input id="search" type="search" placeholder="Pesquisar por nome, número, brinco ou raça..." autocomplete="off">
+        <div class="backup-actions">
+          <button id="exportBackup" class="secondary-button" type="button">Exportar backup</button>
+          <label class="secondary-button import-button">Importar backup<input id="importBackup" type="file" accept="application/json,.json"></label>
+        </div>
+      </div>
+      <div id="animalList" class="animal-list"></div>
+      <div id="empty" class="empty-state"><span>🐄</span><h2>Nenhum animal registrado</h2><p>Abra a câmera para fotografar o primeiro bovino.</p><button class="primary-button" data-go="scanner" type="button">Abrir câmera →</button></div>
+
+      <section class="panel morphometry-panel" aria-labelledby="morphometryTitle">
+        <div class="panel-heading"><div><span class="eyebrow">MOTOR MATEMÁTICO</span><h2 id="morphometryTitle">Análise visual automática</h2><p>O aplicativo localiza o bovino na foto e faz uma pré-estimativa matemática usando a forma visível e o perfil informado.</p></div><span class="soft-icon">⌁</span></div>
+        <div class="morphometry-steps">
+          <article><b>01 · DETECÇÃO</b><span>Localização automática do bovino na fotografia.</span></article>
+          <article><b>02 · GEOMETRIA</b><span>Proporções visíveis convertidas em dimensões morfométricas aproximadas.</span></article>
+          <article><b>03 · CÁLCULO</b><span>Modelo elíptico e fórmula de Crevat, com coeficiente por raça.</span></article>
+          <article><b>04 · RESULTADO</b><span>Estimativa acompanhada de uma faixa ampla de incerteza.</span></article>
+        </div>
+        <p class="tool-status">A análise é automática e experimental. O detector apenas localiza o bovino; as dimensões físicas são aproximadas a partir de médias de raça/porte. Compare sempre com uma balança antes de usar o resultado.</p>
+      </section>
+    </section>
+
+    <section id="scanner" class="screen hidden camera-screen">
+      <div class="page-heading camera-heading"><button class="back-button" id="closeCamera" type="button" aria-label="Fechar câmera">×</button><div><span class="eyebrow">CAPTURA DE IMAGEM</span><h1>Câmera do PesaBoi</h1><p>Enquadre o bovino de corpo inteiro, de preferência de lado.</p></div><span class="live-pill"><i></i> AO VIVO</span></div>
+      <div class="camera-view">
+        <video id="video" autoplay playsinline muted></video>
+        <img id="preview" class="hidden" alt="Prévia da foto">
+        <div class="camera-overlay"><div class="scan-frame"><span class="scan-corner tl"></span><span class="scan-corner tr"></span><span class="scan-corner bl"></span><span class="scan-corner br"></span><div class="scan-line"></div></div><p id="scanMessage">Enquadre o animal inteiro, sem cortar patas ou cabeça.</p></div>
+        <div id="cameraPlaceholder" class="camera-placeholder"><span>📷</span><strong>Câmera pronta</strong><small>Permita o acesso à câmera ou escolha uma foto.</small></div>
+      </div>
+      <div class="camera-toolbar">
+        <p id="cameraStatus" role="status">Preparando a câmera...</p>
+        <div class="camera-actions camera-tools">
+          <button id="nightMode" class="secondary-button" type="button" aria-pressed="false">☾ Modo noturno</button>
+          <button id="torchToggle" class="secondary-button" type="button" aria-pressed="false">☼ Luz da câmera</button>
+        </div>
+        <p id="nightStatus" class="tool-status" role="status">Modo noturno digital desligado. A luz auxiliar depende do suporte do aparelho.</p>
+        <label class="camera-device-label" for="cameraDevice">Câmera conectada</label><select id="cameraDevice" class="camera-device-select"><option value="">Câmera padrão</option></select>
+        <div class="camera-actions">
+          <label class="secondary-button upload-button">Escolher foto<input id="photo" type="file" accept="image/*" capture="environment"></label>
+          <button id="capture" class="primary-button" type="button">Capturar e continuar <span>→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="measurement" class="screen hidden measurement-screen">
+      <div class="measurement-backdrop" aria-hidden="true"></div>
+      <div class="measurement-content">
+        <button class="measurement-back" data-go="scanner" type="button" aria-label="Voltar à câmera">← Voltar à câmera</button>
+        <div class="photo-result" id="photoResult"><span>🐄</span><small>Foto do animal</small></div>
+        <div id="visionResult" class="vision-result" role="status" aria-live="polite">Fotografia preservada integralmente. A análise visual automática será executada ao continuar.</div>
+        <form id="measurementForm" class="panel measurement-form">
+          <div class="measurement-title"><span class="eyebrow">PESABOI · NOVA PESAGEM</span><h1>DADOS DO BOI</h1><p>Identificação do animal e análise automática da fotografia</p></div>
+          <section class="measure-section">
+            <h2>Identificação</h2>
+            <label for="animalName">NOME <small>(opcional)</small></label>
+            <input id="animalName" autocomplete="off" maxlength="70" placeholder="Nome do boi">
+            <label for="animalTag">BRINCO <small>(opcional)</small></label>
+            <input id="animalTag" autocomplete="off" maxlength="40" placeholder="Número do brinco">
+            <div class="selection-grid">
+              <div><label for="breed">RAÇA <em>*</em></label>
+                <select id="breed" required>
+                  <option value="">Seleção</option>
+                  <option>Angus</option><option>Nelore</option><option>Brangus</option><option>Hereford</option>
+                  <option>Brahman</option><option>Senepol</option><option>Guzerá</option><option>Gir</option>
+                  <option>Girolando</option><option>Holandês</option><option>Jersey</option><option>Tabapuã</option>
+                  <option>Simental</option><option>Charolês</option><option>Canchim</option><option>Outra / mestiço</option>
+                </select>
+              </div>
+              <div><label for="sizeClass">PORTE <em>*</em></label>
+                <select id="sizeClass" required><option value="">Seleção</option><option value="Pequeno">Pequeno</option><option value="Médio">Médio</option><option value="Grande">Grande</option></select>
+              </div>
+            </div>
+          </section>
+
+          <section class="measure-section automatic-analysis-section">
+            <h2>1. Análise automática da fotografia</h2>
+            <p class="measure-help">Não é necessário marcar pontos, informar régua ou medir o tórax. O PesaBoi tentará localizar o bovino sozinho. Fotografe de lado, com o animal inteiro, em boa iluminação.</p>
+            <div class="measurement-canvas-wrap"><canvas id="measureCanvas" width="1200" height="1200" aria-label="Fotografia com detecção automática do bovino"></canvas></div>
+            <div id="autoAnalysisState" class="auto-analysis-state" role="status" aria-live="polite">Aguardando a fotografia para iniciar a análise automática.</div>
+            <div id="autoAnalysisMetrics" class="auto-analysis-metrics hidden"></div>
+          </section>
+
+          <section id="calculationResult" class="calculation-result hidden" aria-live="polite">
+            <span class="eyebrow">RESULTADO MATEMÁTICO</span>
+            <div class="calculation-weight"><strong id="calculatedWeight">--</strong><span>kg estimados</span></div>
+            <div id="calculationDetails" class="calculation-details"></div>
+            <p id="calculationWarning" class="measure-help">Pré-estimativa visual experimental, com ampla incerteza. Não é pesagem de balança e não deve ser usada para venda, medicamentos ou decisões veterinárias.</p>
+          </section>
+
+          <button id="saveAnimalForm" class="primary-button weigh-button full-width" type="submit"><span aria-hidden="true">⚖</span> CALCULAR PESO E SALVAR <span>→</span></button>
+          <button id="saveAndReturnDatabase" class="secondary-button full-width save-return-button" type="submit" data-return-to-database="true">SALVAR E VOLTAR AO BANCO DE DADOS</button>
+          <p id="saveStatus" class="tool-status" role="status">Selecione raça e porte. A análise da foto e os cálculos serão executados automaticamente.</p>
+        </form>
+      </div>
+    </section>
+
+    <section id="detail" class="screen hidden">
+      <div class="page-heading"><button class="back-button" data-go="database" type="button" aria-label="Voltar">←</button><div><span class="eyebrow">RELATÓRIO DO ANIMAL</span><h1 id="detailName">Animal</h1><p id="detailSubtitle">Ficha individual</p></div></div>
+      <div class="report-layout">
+        <section class="panel report-photo-panel">
+          <div class="report-photo-wrap"><img id="detailPhoto" alt="Foto atual do bovino" class="hidden"><div id="detailPhotoEmpty" class="photo-empty">🐄<span>Sem foto cadastrada</span></div></div>
+          <div class="photo-report-actions">
+            <label class="secondary-button photo-change-button">Atualizar foto<input id="replacePhoto" type="file" accept="image/*" capture="environment"></label>
+            <button id="goImportFromReport" class="primary-button" type="button">Nova análise pela câmera</button>
+          </div>
+          <p id="photoStatusNote" class="tool-status">A foto fica guardada na ficha. A estimativa visual automática é experimental e precisa ser comparada com uma balança.</p>
+        </section>
+        <section class="panel report-weight-panel">
+          <span class="eyebrow">ÚLTIMO PESO REGISTRADO</span>
+          <div class="report-weight"><strong id="detailWeight">--</strong><span>kg</span></div>
+          <p id="detailRange" class="weight-range">Ainda sem estimativa.</p>
+          <div class="confidence-row"><span>Origem do peso</span><strong id="detailConfidence">Aguardando pesagem</strong></div>
+          <div id="detailInfo" class="detail-info"></div>
+        </section>
+        <section class="panel health-panel">
+          <div class="panel-heading"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Saúde do animal</h2></div><span id="healthBadge" class="health-badge health-unknown">Não informado</span></div>
+          <div id="healthAlerts" class="health-alerts">Nenhum alerta visual registrado.</div>
+          <p id="healthNotesView" class="health-notes-view"></p>
+        </section>
+        <section class="panel vaccine-panel">
+          <div class="panel-heading"><div><span class="eyebrow">CONTROLE SANITÁRIO</span><h2>Vacinas</h2></div><span class="soft-icon">✚</span></div>
+          <div id="vaccineReportList" class="vaccine-report-list"></div>
+          <button id="editFromReport" class="secondary-button" type="button">Atualizar saúde e vacinas</button>
+        </section>
+        <section class="panel history-panel">
+          <div class="panel-heading"><div><span class="eyebrow">EVOLUÇÃO DO REBANHO</span><h2>Histórico de peso</h2></div><span class="soft-icon">↗</span></div>
+          <div id="weightChart" class="weight-chart"></div><div id="historyList" class="history-list"></div>
+        </section>
+        <section class="panel validation-panel">
+          <div class="panel-heading"><div><span class="eyebrow">CONTROLE DE PRECISÃO</span><h2>Comparação com balança</h2></div><span class="soft-icon">±</span></div>
+          <div id="validationMetrics" class="validation-metrics">Registre o peso real de balança no relatório para começar a comparar.</div>
+          <p class="form-help">MAE, MAPE e viés são calculados com as comparações registradas. Para avaliar a precisão de verdade, mantenha animais separados que não foram usados na calibração.</p>
+        </section>
+      </div>
+      <div class="report-footer-actions">
+        <button id="returnToDatabaseFromReport" class="secondary-button" type="button">← Voltar ao Banco de Dados</button>
+        <button id="deleteAnimal" class="danger-button" type="button">Excluir animal</button>
+      </div>
+    </section>
+
+    <section id="update" class="screen hidden">
+      <div class="page-heading"><button class="back-button" data-go="detail" type="button" aria-label="Voltar">←</button><div><span class="eyebrow">RELATÓRIO DO ANIMAL</span><h1>Atualizar ficha</h1><p id="updateSubtitle">Edite as informações do bovino.</p></div></div>
+      <form id="updateForm" class="panel update-form">
+        <div class="form-grid"><div><label for="editName">Nome</label><input id="editName" maxlength="70"></div><div><label for="editTag">Brinco <small>(opcional)</small></label><input id="editTag" maxlength="40"></div></div>
+        <div class="form-grid"><div><label for="editBreed">Raça</label><select id="editBreed"><option>Angus</option><option>Nelore</option><option>Brangus</option><option>Hereford</option><option>Brahman</option><option>Senepol</option><option>Guzerá</option><option>Gir</option><option>Girolando</option><option>Holandês</option><option>Jersey</option><option>Tabapuã</option><option>Simental</option><option>Charolês</option><option>Canchim</option><option>Outra / mestiço</option></select></div><div><label for="editSize">Porte</label><select id="editSize"><option value="">Não informado</option><option value="Pequeno">Pequeno</option><option value="Médio">Médio</option><option value="Grande">Grande</option></select></div></div>
+        <div class="sick-toggle-row"><div><strong>Animal doente?</strong><small>Marque quando houver suspeita ou diagnóstico informado pelo responsável/veterinário.</small></div><label class="switch"><input id="editSick" type="checkbox"><span class="switch-slider"></span></label></div>
+        <label for="editHealthNotes">Doença ou sinais observados <small>(opcional)</small></label><textarea id="editHealthNotes" rows="3" placeholder="Descreva o que foi observado ou informado pelo veterinário..."></textarea>
+        <label for="editFeed">Alimentação <small>(opcional)</small></label><textarea id="editFeed" rows="2" placeholder="Informações da alimentação..."></textarea>
+        <label for="editNotes">Outras observações <small>(opcional)</small></label><textarea id="editNotes" rows="2" placeholder="Observações sobre o animal..."></textarea>
+
+        <h2 class="subsection-title">Vacinas aplicadas ou programadas</h2>
+        <p class="form-help">Registre o nome da vacina e a data. O protocolo correto deve ser definido com o médico-veterinário da propriedade.</p>
+        <div class="vaccine-entry-grid"><div><label for="vaccineName">Vacina</label><input id="vaccineName" placeholder="Nome da vacina"></div><div><label for="vaccineDate">Data</label><input id="vaccineDate" type="date"></div><div><label for="vaccineStatus">Situação</label><select id="vaccineStatus"><option value="Aplicada">Aplicada</option><option value="Programada">Programada</option></select></div></div>
+        <button id="addVaccine" class="secondary-button" type="button">Adicionar vacina</button>
+        <div id="vaccineEditorList" class="vaccine-editor-list"></div>
+
+        <h2 class="subsection-title">Peso confirmado em balança <small>(opcional)</small></h2>
+        <p class="form-help">Use somente quando tiver uma pesagem real. Esse registro ficará identificado como peso de balança, separado da estimativa por foto.</p>
+        <div class="form-grid"><div><label for="newWeight">Peso em kg</label><input id="newWeight" type="number" min="1" max="2000" step="0.1" placeholder="Ex.: 425"></div><div><label for="newWeighingNote">Observação</label><input id="newWeighingNote" placeholder="Ex.: pesagem na balança da fazenda"></div></div>
+        <label class="calibration-check"><input id="useForCalibration" type="checkbox" checked> Comparar com a última estimativa e usar no ajuste matemático desta raça/porte.</label>
+        <p class="form-help">São necessárias pelo menos cinco comparações válidas para calcular um coeficiente empírico. Reserve animais/medições separados para conferir a validação.</p>
+        <button class="primary-button full-width" type="submit">Salvar alterações</button>
+      </form>
+    </section>
+  </main>
+  <footer class="footer">PesaBoi <span>•</span> Controle inteligente do rebanho <span>•</span> Versão 3.11 <span>•</span> <a href="privacidade.html" target="_blank" rel="noopener">Privacidade</a> <span>•</span> <button id="adPreferences" class="footer-preferences" type="button">Preferências de anúncios</button></footer>
+</div>
+<section id="adsConsentPanel" class="ads-consent hidden" role="dialog" aria-modal="false" aria-labelledby="adsConsentTitle">
+  <div class="ads-consent-copy">
+    <strong id="adsConsentTitle">Preferências de publicidade</strong>
+    <p>Com sua autorização, o PesaBoi poderá carregar anúncios de terceiros, que podem usar cookies para exibir e medir publicidade. Recusar não limita o uso do aplicativo. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+  </div>
+  <div class="ads-consent-actions">
+    <button id="rejectAdsCookies" class="secondary-button" type="button">Recusar</button>
+    <button id="acceptAdsCookies" class="primary-button" type="button">Aceitar publicidade</button>
+  </div>
+</section>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="monetization-config.js?v=3.11"></script>
+<script src="monetization.js?v=3.11" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js" defer></script>
+<script src="morphometry.js?v=3.11" defer></script>
+<script src="app.js?v=3.11" defer></script>
+</body>
+</html>

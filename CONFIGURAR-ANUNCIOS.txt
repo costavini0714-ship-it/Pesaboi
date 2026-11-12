@@ -1,0 +1,33 @@
+PESABOI 3.11 — COMO ATIVAR OS ANÚNCIOS
+
+IMPORTANTE
+Os anúncios vêm DESATIVADOS por padrão. Eles não vão aparecer até você ter sua própria conta Google AdSense, o site ser aprovado e os IDs reais serem informados.
+
+1. Entre em https://adsense.google.com/ e crie/acesse sua conta.
+2. Adicione o endereço público do PesaBoi e conclua a verificação solicitada pelo Google.
+3. Aguarde a aprovação do site. O Google não libera anúncios antes dessa aprovação.
+4. No AdSense, crie um bloco de anúncio do tipo Display responsivo.
+5. Copie o ID do editor (começa com ca-pub-) e o número do bloco de anúncio.
+6. Abra monetization-config.js e altere somente estes campos:
+
+   enabled: true,
+   publisherId: 'ca-pub-SEU_ID_REAL',
+   homeAdSlot: 'NUMERO_REAL_DO_BLOCO',
+
+7. Salve, publique os arquivos atualizados no Render e teste pelo endereço HTTPS em um navegador comum.
+8. Se o AdSense solicitar ads.txt, use a linha EXATA fornecida pelo seu painel. Crie ads.txt na raiz do domínio. O arquivo ads.txt.modelo é apenas um exemplo e não pode ser publicado sem os dados reais.
+
+ONDE OS ANÚNCIOS APARECEM
+- Somente na tela inicial, em um espaço identificado como ANÚNCIO.
+- Não aparecem na câmera, na captura, na pesagem, nos relatórios individuais nem nas telas de atualização.
+- Não aparecem no modo instalado/PWA.
+- O usuário pode aceitar ou recusar cookies de publicidade. Recusar não bloqueia o aplicativo.
+
+REGRAS IMPORTANTES
+- Nunca clique nos próprios anúncios.
+- Não peça a amigos ou clientes para clicarem.
+- Não coloque imagens, setas ou botões próximos para incentivar cliques.
+- Não invente nem copie o ID de outra pessoa.
+
+PESABOI PREMIUM
+A apresentação do Premium está no site, mas cobrança e confirmação segura de assinatura ainda não estão integradas. Não há cobrança nem remoção automática de anúncios por pagamento nesta versão. Isso precisa ser conectado a um gateway de pagamento e validado no servidor antes de oferecer uma assinatura.

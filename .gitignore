@@ -1,0 +1,27 @@
+# Segredos locais
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Dados de execução e bancos locais
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# Editor e sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+
+# Exportações locais
+PesaBoi-backup-*.json
