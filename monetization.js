@@ -49,9 +49,10 @@
     if (adScriptPromise) return adScriptPromise;
     adScriptPromise = new Promise((resolve, reject) => {
       const existing = document.querySelector('script[data-pesaboi-adsense="true"]');
-      if (existing?.dataset.loaded === 'true') return resolve();
+      if (existing?.dataset.failed === 'true') return reject(new Error('Falha ao carregar o AdSense.'));
+      if (existing?.dataset.loaded === 'true' || window.adsbygoogle) return resolve();
       if (existing) {
-        existing.addEventListener('load', () => resolve(), { once: true });
+        existing.addEventListener('load', () => { existing.dataset.loaded = 'true'; resolve(); }, { once: true });
         existing.addEventListener('error', () => reject(new Error('Falha ao carregar o AdSense.')), { once: true });
         return;
       }
@@ -61,7 +62,7 @@
       script.dataset.pesaboiAdsense = 'true';
       script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(config.publisherId)}`;
       script.onload = () => { script.dataset.loaded = 'true'; resolve(); };
-      script.onerror = () => reject(new Error('O navegador não conseguiu carregar o serviço de anúncios.'));
+      script.onerror = () => { script.dataset.failed = 'true'; reject(new Error('O navegador não conseguiu carregar o serviço de anúncios.')); };
       document.head.appendChild(script);
     });
     return adScriptPromise;

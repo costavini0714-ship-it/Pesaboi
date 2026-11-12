@@ -2,7 +2,7 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 echo =====================================================
-echo                 PESABOI 3.11
+echo                 PESABOI 3.12
 echo      Análise visual automática experimental
 echo ==================================================
 echo A detecao visual pode baixar um modelo na primeira utilizacao. A estimativa e experimental.

@@ -1,6 +1,6 @@
 'use strict';
-const CACHE_NAME = 'pesaboi-shell-v3-11';
-const CORE = ['./', './index.html', './style.css?v=3.11', './app.js?v=3.11', './morphometry.js?v=3.11', './monetization.js?v=3.11', './manifest.webmanifest', './privacidade.html', './assets/fundo-fazenda.png'];
+const CACHE_NAME = 'pesaboi-shell-v3-12';
+const CORE = ['./', './index.html', './style.css?v=3.12', './app.js?v=3.12', './morphometry.js?v=3.12', './monetization.js?v=3.12', './manifest.webmanifest', './privacidade.html', './assets/fundo-fazenda.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });

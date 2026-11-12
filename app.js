@@ -926,7 +926,7 @@ $('deleteAnimal').addEventListener('click', async () => {
 
 $('exportBackup').addEventListener('click', async () => {
   try {
-    const backup = { app: 'PesaBoi', version: '3.11', exportedAt: new Date().toISOString(), animals: [] };
+    const backup = { app: 'PesaBoi', version: '3.12', exportedAt: new Date().toISOString(), animals: [] };
     for (const animal of animals) {
       const copy = { ...animal };
       const blob = await getPhotoBlob(animal.id);
@@ -978,6 +978,6 @@ async function init() {
     else { account = null; updateHeader(); show('login'); }
   } catch (error) { console.error(error); account = null; updateHeader(); show('login'); toast('Não foi possível carregar os registros salvos.'); }
   checkIntegrationStatus();
-  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('./service-worker.js?v=3.11').catch(error => console.warn('PWA:', error));
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('./service-worker.js?v=3.12').catch(error => console.warn('PWA:', error));
 }
 init();

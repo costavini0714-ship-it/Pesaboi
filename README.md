@@ -1,6 +1,6 @@
-# PesaBoi 3.11 — monetização web preparada
+# PesaBoi 3.12 — AdSense conectado para verificação
 
-O PesaBoi 3.11 mantém a análise visual experimental e simplifica a navegação. A versão 3.9 removeu a etapa de calibração manual da fotografia. O usuário não precisa marcar pontos, colocar régua, informar distâncias em pixels ou medir o tórax com fita no fluxo de pesagem.
+O PesaBoi 3.12 mantém a análise visual experimental e simplifica a navegação. A versão 3.9 removeu a etapa de calibração manual da fotografia. O usuário não precisa marcar pontos, colocar régua, informar distâncias em pixels ou medir o tórax com fita no fluxo de pesagem.
 
 ## Fluxo
 1. Abra a câmera e fotografe o bovino de lado, com o corpo inteiro e boa iluminação.
@@ -36,7 +36,7 @@ Não use a pré-estimativa como única referência para venda, dosagem de medica
 
 ## Publicar pelo GitHub e Render
 1. Crie um repositório novo no GitHub.
-2. Extraia o ZIP e envie **todos os arquivos e pastas que estão dentro de `PesaBoi-3.11`** para a raiz do repositório. O arquivo `render.yaml` deve ficar na raiz, ao lado de `server.py` e `requirements.txt`.
+2. Extraia o ZIP e envie **todos os arquivos e pastas que estão dentro de `PesaBoi-3.12`** para a raiz do repositório. O arquivo `render.yaml` deve ficar na raiz, ao lado de `server.py` e `requirements.txt`.
 3. No Render, escolha **New > Blueprint**, conecte o repositório e confirme o serviço descrito em `render.yaml`.
 4. O Render usará automaticamente:
    - Runtime: Python
@@ -56,14 +56,16 @@ A câmera do navegador em produção requer HTTPS. O Render fornece HTTPS para o
 - Os demais dados, cálculos e funcionalidades da versão 3.9 foram preservados.
 
 
-## Monetização — versão 3.11
+## Monetização — versão 3.12
 
-- O projeto está preparado para Google AdSense na página inicial, no navegador web e em HTTPS. Não carrega anúncios na câmera, captura, medição, relatório individual ou tela de atualização dos animais. O modo instalado/PWA também não carrega AdSense.
-- Os anúncios ficam desligados por padrão. Para ativar, primeiro crie uma conta Google AdSense, adicione o domínio e aguarde a aprovação do site. O Google não exibe anúncios antes da aprovação.
-- Depois de aprovado, abra `monetization-config.js` e preencha `enabled: true`, `publisherId` com o identificador real `ca-pub-...` e `homeAdSlot` com o número do bloco responsivo criado no AdSense. Não use IDs fictícios.
-- Se o painel do AdSense solicitar `ads.txt`, siga a linha exata fornecida pelo painel e publique-a em `/ads.txt`. O arquivo `ads.txt.modelo` deste ZIP é apenas um exemplo e não deve ser publicado sem substituir os dados.
-- O primeiro carregamento pede autorização para cookies publicitários. O usuário pode aceitar ou recusar; recusar não bloqueia as funções do PesaBoi. A preferência pode ser alterada no rodapé.
-- Não clique nos próprios anúncios nem incentive outras pessoas a clicar. Os anúncios são identificados como “ANÚNCIO” e ficam separados dos botões de navegação.
+- O snippet do Google AdSense fornecido pelo responsável foi inserido em `index.html`, dentro de `<head>`, para permitir a verificação do site.
+- O ID de editor `ca-pub-3842159038545616` foi preenchido em `monetization-config.js`; `enabled` permanece `false` e `homeAdSlot` vazio até a aprovação do site e a criação de um bloco de anúncio.
+- Foi adicionado o arquivo `/ads.txt` na raiz com a linha `google.com, pub-3842159038545616, DIRECT, f08c47fec0942fa0`. Se o painel do AdSense mostrar uma linha diferente, prevalece a linha exata do painel.
+- O carregador usa o snippet já inserido no cabeçalho para evitar carregar a biblioteca AdSense duas vezes.
+- Os blocos manuais continuam limitados à tela inicial, em HTTPS e navegador web; não aparecem na câmera, captura, pesagem ou relatórios individuais.
+- Após o deploy, confira `https://pesaboi.onrender.com/ads.txt`, volte ao AdSense e clique em Verificar. A aprovação ainda depende da análise do Google.
+- Após a aprovação, crie um bloco Display responsivo, copie o `data-ad-slot`, defina `enabled: true` e preencha `homeAdSlot`. O consentimento do usuário continua sendo solicitado antes de inserir os blocos manuais.
+- Não clique nos próprios anúncios nem incentive terceiros a clicar.
 
 ### Plano Premium
 

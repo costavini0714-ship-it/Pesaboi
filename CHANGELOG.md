@@ -1,3 +1,12 @@
+# PesaBoi 3.12 — AdSense conectado para verificação
+
+- Inserido no `<head>` o snippet de verificação do Google AdSense informado pelo responsável do PesaBoi.
+- Preenchido o ID de editor `ca-pub-3842159038545616` na configuração de monetização; veiculação manual permanece desligada até aprovação e ID de bloco.
+- Criado `ads.txt` na raiz com o registro do publisher informado.
+- Ajustado o carregador para reaproveitar a tag AdSense do cabeçalho e não duplicar a biblioteca.
+- Atualizado o cache/service worker para a versão 3.12.
+- Mantida a veiculação de blocos manuais desativada até a aprovação e configuração de `data-ad-slot`.
+
 # PesaBoi 3.11 — Monetização web preparada
 
 - Adicionado espaço responsivo para anúncio na tela inicial, separado dos botões e sem anúncios nas etapas de câmera, pesagem e relatórios individuais.

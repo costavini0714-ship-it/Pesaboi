@@ -13,7 +13,7 @@ MAX_REQUEST_BYTES = 2 * 1024 * 1024
 
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", "8080"))
-APP_VERSION = "3.11"
+APP_VERSION = "3.12"
 from morphometry import estimate as estimate_morphometry
 from hybrid_weighing import estimate_hybrid, estimate_two_photo_ellipse
 
@@ -53,7 +53,7 @@ class PesaBoiHandler(SimpleHTTPRequestHandler):
                 "ok": True,
                 "app": "PesaBoi",
                 "version": APP_VERSION,
-                "engine": "PesaBoi 3.11 — monetização web preparada + pré-estimativa morfométrica",
+                "engine": "PesaBoi 3.12 — AdSense conectado para verificação + pré-estimativa morfométrica",
                 "estimator": "detecção visual no navegador + proporções médias de raça/porte + fórmula morfométrica experimental",
                 "ai": True,
                 "ai_provider": "COCO-SSD local no navegador; sem chave de API",
@@ -75,7 +75,7 @@ class PesaBoiHandler(SimpleHTTPRequestHandler):
             return
         if path == "/api/morphometry":
             send_json(self, 200, {
-                "engine": "PesaBoi 3.11 — monetização web preparada + pré-estimativa morfométrica",
+                "engine": "PesaBoi 3.12 — AdSense conectado para verificação + pré-estimativa morfométrica",
                 "method": "pré-estimativa visual por detecção bovina local e geometria elíptica aproximada",
                 "endpoint": "POST /api/estimate/hybrid",
                 "required": ["foto", "raça", "porte"],
@@ -120,7 +120,7 @@ def main() -> None:
         raise SystemExit(f"Não foi possível abrir uma porta para o PesaBoi: {last_error}")
     httpd.daemon_threads = True
     print("=" * 62)
-    print(f"PESABOI {APP_VERSION} — monetização web preparada + detecção bovina local")
+    print(f"PESABOI {APP_VERSION} — AdSense conectado para verificação + detecção bovina local")
     print(f"Servidor: http://127.0.0.1:{PORT}")
     if not os.environ.get("PORT") and PORT != 8080:
         print(f"Aviso: a porta 8080 estava ocupada; usando a porta {PORT}.")

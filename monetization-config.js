@@ -1,12 +1,12 @@
 /*
- * PesaBoi 3.11 — configuração de anúncios e Premium.
- * NÃO invente IDs: preencha somente com os identificadores fornecidos
- * pela sua própria conta Google AdSense depois que o site for aprovado.
+ * PesaBoi 3.12 — configuração de anúncios e Premium.
+ * ID de editor fornecido pelo responsável do site.
+ * Anúncios continuam desligados até a aprovação do site e a criação de um bloco de anúncios.
  */
 window.PESABOI_MONETIZATION_CONFIG = Object.freeze({
   provider: 'adsense',
   enabled: false,
-  publisherId: '',       // Ex.: ca-pub-1234567890123456
-  homeAdSlot: '',        // ID numérico do bloco de anúncio responsivo
+  publisherId: 'ca-pub-3842159038545616',
+  homeAdSlot: '',        // Preencher com o ID numérico do bloco responsivo após aprovação
   premiumStatusEndpoint: '/api/monetization/status'
 });
