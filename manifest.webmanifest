@@ -1,10 +1,10 @@
 {
-  "name": "PesaBoi 3.12",
+  "name": "PesaBoi 3.16",
   "short_name": "PesaBoi",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#20394a",
   "theme_color": "#20394a",
   "lang": "pt-BR",
-  "description": "Análise visual automática e pré-estimativa morfométrica experimental."
+  "description": "Central Agro com PesaBoi e GPS Agrônomo para agricultura de precisão."
 }

@@ -25,3 +25,10 @@ Thumbs.db
 
 # Exportações locais
 PesaBoi-backup-*.json
+
+# Keep the safe template visible in the repository
+!.env.example
+
+# Arquivo local exportado pelo Gerenciador Central Agro
+central-agro.env
+*.secrets.env

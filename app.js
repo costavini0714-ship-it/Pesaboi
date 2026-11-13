@@ -3,7 +3,7 @@
 const $ = (id) => document.getElementById(id);
 const DB_NAME = 'pesaboi-database-v3';
 const DB_VERSION = 1;
-const screens = ['login', 'home', 'database', 'scanner', 'measurement', 'detail', 'update'];
+const screens = ['login', 'central', 'home', 'gps', 'agroLab', 'integrations', 'database', 'scanner', 'measurement', 'detail', 'update'];
 let account = null;
 let animals = [];
 let currentId = null;
@@ -204,20 +204,41 @@ function stopCamera() {
   if ($('torchToggle')) { $('torchToggle').setAttribute('aria-pressed', 'false'); $('torchToggle').textContent = '☼ Luz da câmera'; }
 }
 
+function setCameraPermissionPanel(visible, title, message, help = '', buttonText = 'Permitir uso da câmera') {
+  const panel = $('cameraPermissionPanel');
+  if (!panel) return;
+  panel.classList.toggle('hidden', !visible);
+  if (title) $('cameraPermissionTitle').textContent = title;
+  if (message) $('cameraPermissionText').textContent = message;
+  if ($('cameraPermissionHelp')) $('cameraPermissionHelp').textContent = help;
+  if ($('allowCamera')) $('allowCamera').textContent = buttonText;
+}
+
+async function prepareCameraAccess() {
+  // Solicita a câmera imediatamente a partir do clique do usuário que abriu o scanner.
+  // Isso permite que o próprio navegador mostre sua caixa nativa de permissão.
+  return startCamera();
+}
+
 function show(id) {
   if (!screens.includes(id)) return;
+  if (id !== 'login' && !account) id = 'login';
   if (id !== 'scanner') stopCamera();
   if (id === 'scanner') {
     resetMeasurement();
     $('preview').classList.add('hidden'); $('preview').removeAttribute('src');
     $('video').classList.remove('hidden'); $('cameraPlaceholder').classList.remove('hidden');
-    $('cameraStatus').textContent = 'Preparando a câmera ou aguardando uma foto...';
+    $('cameraStatus').textContent = 'Verificando a permissão da câmera...';
   }
   screens.forEach(name => $(name)?.classList.toggle('hidden', name !== id));
   document.body.classList.toggle('has-measurement', id === 'measurement');
+  if (id === 'central') { $('centralFarm').textContent = account?.farm || 'Minha Fazenda'; $('centralHello').textContent = `Olá, ${account?.owner || 'produtor'}! Escolha uma ferramenta para continuar.`; }
   if (id === 'home') refreshHome();
+  if (id === 'gps') window.PesaBoiAgroGPS?.init();
+  if (id === 'agroLab') window.AgroServices?.init();
+  if (id === 'integrations') window.IntegrationManager?.init();
   if (id === 'database') renderDatabase();
-  if (id === 'scanner') startCamera();
+  if (id === 'scanner') prepareCameraAccess();
   if (id === 'detail' && currentId) renderDetail(currentId);
   window.PesaBoiMonetization?.onScreen(id, Boolean(account?.id));
 }
@@ -237,8 +258,8 @@ $('register').addEventListener('submit', async event => {
   accountStorageSave();
   updateHeader();
   await loadData();
-  show('home');
-  toast('Propriedade pronta. Seus registros estão separados neste dispositivo.');
+  show('central');
+  toast('Central Agro pronta. Escolha um módulo para começar.');
 });
 
 $('logout').addEventListener('click', () => {
@@ -247,13 +268,45 @@ $('logout').addEventListener('click', () => {
   updateHeader(); show('login');
 });
 
+window.PesaBoiShow = show;
+
 function updateHeader() {
   $('headerFarm').textContent = account?.farm || '';
   $('headerFarm').classList.toggle('hidden', !account);
   $('logout').classList.toggle('hidden', !account);
 }
 
+$('openPesaboi')?.addEventListener('click', () => show('home'));
+$('openAgroGps')?.addEventListener('click', () => show('gps'));
+$('openIntegrations')?.addEventListener('click', () => show('integrations'));
 $('openCamera').addEventListener('click', () => show('scanner'));
+$('allowCamera')?.addEventListener('click', async () => { await startCamera(); });
+// Fallback de captura pelo seletor nativo do aparelho. Em celulares compatíveis,
+// capture=environment oferece a câmera traseira sem depender da prévia getUserMedia.
+function openDeviceCameraCapture() {
+  const input = $('photo');
+  if (!input) { toast('A opção de foto não está disponível nesta tela.'); return; }
+  try {
+    stopCamera();
+    input.value = '';
+    input.setAttribute('accept', 'image/*');
+    input.setAttribute('capture', 'environment');
+    $('cameraStatus').textContent = 'Abrindo a câmera ou galeria do aparelho…';
+    input.click(); // deve ser executado diretamente a partir do clique do usuário.
+  } catch (error) {
+    $('cameraStatus').textContent = 'Não foi possível abrir a câmera do aparelho. Use Escolher foto salva.';
+    toast(error.message || 'Não foi possível abrir o seletor de imagens.');
+  }
+}
+$('captureFromDevice')?.addEventListener('click', openDeviceCameraCapture);
+$('choosePhotoFallback')?.addEventListener('click', () => {
+  const input = $('photo');
+  if (!input) return;
+  input.value = '';
+  input.removeAttribute('capture');
+  input.setAttribute('accept', 'image/*');
+  input.click();
+});
 $('openDatabase').addEventListener('click', () => show('database'));
 $('closeCamera').addEventListener('click', () => show('home'));
 
@@ -298,22 +351,49 @@ async function startCamera() {
   $('preview').classList.add('hidden'); $('video').classList.add('hidden'); $('cameraPlaceholder').classList.remove('hidden');
   $('cameraStatus').textContent = 'Solicitando acesso à câmera...'; $('photo').value = '';
   $('video').classList.toggle('night-mode', nightModeOn);
-  if (!navigator.mediaDevices?.getUserMedia) {
-    $('cameraStatus').textContent = 'Este endereço não permite abrir a câmera. Use HTTPS no Render ou o servidor local do pacote.';
+  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+    $('cameraStatus').textContent = 'A câmera precisa de um endereço seguro (HTTPS ou localhost). Você ainda pode escolher uma foto.';
+    setCameraPermissionPanel(true, 'A prévia ao vivo não está disponível neste endereço', 'A câmera ao vivo exige HTTPS ou localhost. Tente Abrir câmera do aparelho para usar a captura nativa, ou escolha uma foto salva.', 'A captura pelo seletor do aparelho é uma alternativa; o navegador/sistema ainda pode pedir sua própria permissão.', 'Tentar câmera ao vivo após abrir em HTTPS');
     return;
   }
   try {
-    const video = selectedCameraId
+    const preferredVideo = selectedCameraId
       ? { deviceId: { exact: selectedCameraId }, width: { ideal: 1440 }, height: { ideal: 900 } }
       : { facingMode: { ideal: 'environment' }, width: { ideal: 1440 }, height: { ideal: 900 } };
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video, audio: false });
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: preferredVideo, audio: false });
+    } catch (firstError) {
+      // Alguns celulares/USB cameras não aceitam facingMode ou a resolução ideal.
+      // Faz uma segunda tentativa simples, sem exigir um modelo específico de câmera.
+      if (['OverconstrainedError', 'ConstraintNotSatisfiedError', 'NotFoundError'].includes(firstError?.name) || selectedCameraId) {
+        selectedCameraId = '';
+        if ($('cameraDevice')) $('cameraDevice').value = '';
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      } else {
+        throw firstError;
+      }
+    }
     $('video').srcObject = cameraStream; $('video').classList.remove('hidden'); $('cameraPlaceholder').classList.add('hidden');
     await $('video').play().catch(() => {});
+    setCameraPermissionPanel(false);
     $('cameraStatus').textContent = 'Câmera pronta. Mantenha o bovino inteiro dentro da área quadrada.';
     await refreshCameraChoices();
   } catch (error) {
-    $('cameraStatus').textContent = 'Não foi possível abrir a câmera (' + (error?.name || 'acesso negado') + '). Você ainda pode escolher uma foto.';
+    const errorName = error?.name || 'acesso negado';
+    const blocked = ['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(errorName);
+    let message = 'Não foi possível abrir a câmera (' + errorName + '). Você ainda pode escolher uma foto.';
+    let help = 'Confira se existe uma câmera conectada, feche outros aplicativos que estejam usando a câmera e tente novamente. A escolha de foto continua disponível.';
+    if (blocked) {
+      message = 'O navegador ou o sistema bloqueou a câmera. O PesaBoi não consegue retirar esse bloqueio automaticamente.';
+      help = 'Se já foi negada antes, o navegador não mostrará outra pergunta automaticamente. No Chrome, abra o ícone à esquerda do endereço → Configurações do site → Câmera → Permitir e recarregue. No Android, confira também Configurações do aparelho → Aplicativos → Chrome → Permissões → Câmera. No iPhone/iPad, confira Ajustes → Safari → Câmera. Enquanto isso, toque em Abrir câmera do aparelho: em celulares compatíveis, o seletor nativo permite fotografar ou escolher uma imagem sem abrir a prévia ao vivo do site.';
+    } else if (errorName === 'NotReadableError') {
+      help = 'A câmera pode estar sendo usada por outro aplicativo. Feche o aplicativo de câmera/WhatsApp/Meet, volte ao PesaBoi e tente novamente. Você também pode escolher uma foto.';
+    } else if (errorName === 'NotFoundError') {
+      help = 'Nenhuma câmera foi encontrada. Conecte uma câmera ou use Escolher uma foto para continuar.';
+    }
+    $('cameraStatus').textContent = blocked ? 'A permissão do navegador precisa ser liberada nas configurações do site. A pesagem por foto continua disponível.' : message;
     $('cameraPlaceholder').classList.remove('hidden');
+    setCameraPermissionPanel(true, blocked ? 'Acesso à câmera ao vivo bloqueado' : 'Não foi possível iniciar a câmera ao vivo', message, help, blocked ? 'Tentar novamente após liberar nas configurações' : 'Tentar câmera ao vivo');
   }
 }
 
@@ -926,7 +1006,7 @@ $('deleteAnimal').addEventListener('click', async () => {
 
 $('exportBackup').addEventListener('click', async () => {
   try {
-    const backup = { app: 'PesaBoi', version: '3.12', exportedAt: new Date().toISOString(), animals: [] };
+    const backup = { app: 'PesaBoi', version: '3.19', exportedAt: new Date().toISOString(), animals: [] };
     for (const animal of animals) {
       const copy = { ...animal };
       const blob = await getPhotoBlob(animal.id);
@@ -964,7 +1044,7 @@ $('importBackup').addEventListener('change', async event => {
 async function checkIntegrationStatus() {
   try {
     const response = await fetch('/api/health', { cache: 'no-store' });
-    if (response.ok) $('saveStatus').textContent = 'Motor matemático PesaBoi ativo. Sem IA e sem peso de referência inventado.';
+    if (response.ok) { const info = await response.json(); $('saveStatus').textContent = `Servidor PesaBoi ${info.version || 'conectado'} ativo. Se esperava a versão 3.19 e aparece outra, o deploy ainda não foi atualizado.`; }
   } catch {
     $('saveStatus').textContent = 'Motor matemático disponível quando o servidor PesaBoi estiver em execução.';
   }
@@ -974,10 +1054,10 @@ async function init() {
   try {
     account = JSON.parse(localStorage.getItem('pesaboi_account_v3') || localStorage.getItem('pesaboi_account') || 'null');
     if (account && !account.id) { account.id = makeId(); accountStorageSave(); }
-    if (account?.owner) { updateHeader(); await loadData(); show('home'); }
+    if (account?.owner) { updateHeader(); await loadData(); show('central'); }
     else { account = null; updateHeader(); show('login'); }
   } catch (error) { console.error(error); account = null; updateHeader(); show('login'); toast('Não foi possível carregar os registros salvos.'); }
   checkIntegrationStatus();
-  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('./service-worker.js?v=3.12').catch(error => console.warn('PWA:', error));
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('./service-worker.js?v=3.19').catch(error => console.warn('PWA:', error));
 }
 init();

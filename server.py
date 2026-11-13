@@ -5,7 +5,7 @@ import os
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 BASE_DIR = Path(__file__).resolve().parent
 MAX_REQUEST_BYTES = 2 * 1024 * 1024
@@ -13,7 +13,8 @@ MAX_REQUEST_BYTES = 2 * 1024 * 1024
 
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", "8080"))
-APP_VERSION = "3.12"
+APP_VERSION = "3.19"
+import agro_services
 from morphometry import estimate as estimate_morphometry
 from hybrid_weighing import estimate_hybrid, estimate_two_photo_ellipse
 
@@ -37,23 +38,37 @@ class PesaBoiHandler(SimpleHTTPRequestHandler):
     def log_message(self, fmt: str, *args) -> None:
         print("[PesaBoi] " + (fmt % args), flush=True)
 
-    def read_body(self) -> bytes:
+    def read_body(self, max_bytes: int = MAX_REQUEST_BYTES) -> bytes:
         try:
             length = int(self.headers.get("Content-Length", "0"))
         except ValueError as exc:
             raise ValueError("Tamanho da solicitação inválido.") from exc
-        if length <= 0 or length > MAX_REQUEST_BYTES:
-            raise ValueError("A solicitação está vazia ou excede 2 MB.")
+        if length <= 0 or length > max_bytes:
+            raise ValueError(f"A solicitação está vazia ou excede {max_bytes // (1024*1024)} MB.")
         return self.rfile.read(length)
+
+    def send_bytes(self, status: int, content_type: str, body: bytes) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.end_headers()
+        self.wfile.write(body)
 
     def do_GET(self) -> None:
         path = urlparse(self.path).path
+        if path == "/api/integrations/status":
+            # Resumo sem valores secretos: informa configuração, nunca devolve tokens.
+            send_json(self, 200, agro_services.integration_status())
+            return
         if path == "/api/health":
             send_json(self, 200, {
                 "ok": True,
                 "app": "PesaBoi",
                 "version": APP_VERSION,
-                "engine": "PesaBoi 3.12 — AdSense conectado para verificação + pré-estimativa morfométrica",
+                "engine": "Central Agro 3.19 — Sentinel-2, NDVI, Open-Meteo, NASA POWER, OpenLayers e módulos rurais",
+                "agroServices": agro_services.api_status(),
                 "estimator": "detecção visual no navegador + proporções médias de raça/porte + fórmula morfométrica experimental",
                 "ai": True,
                 "ai_provider": "COCO-SSD local no navegador; sem chave de API",
@@ -73,9 +88,19 @@ class PesaBoiHandler(SimpleHTTPRequestHandler):
                 "note": "Anúncios só carregam após configuração dos IDs e consentimento publicitário. Nenhuma assinatura é cobrada ou ativada nesta versão."
             })
             return
+        agro_response = agro_services.get_response(path, parse_qs(urlparse(self.path).query))
+        if agro_response is not None:
+            status, content_type, payload = agro_response
+            if isinstance(payload, bytes):
+                self.send_bytes(status, content_type, payload)
+            else:
+                body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+                self.send_bytes(status, content_type, body)
+            return
         if path == "/api/morphometry":
             send_json(self, 200, {
-                "engine": "PesaBoi 3.12 — AdSense conectado para verificação + pré-estimativa morfométrica",
+                "engine": "Central Agro 3.19 — Sentinel-2, NDVI, Open-Meteo, NASA POWER, OpenLayers e módulos rurais",
+                "agroServices": agro_services.api_status(),
                 "method": "pré-estimativa visual por detecção bovina local e geometria elíptica aproximada",
                 "endpoint": "POST /api/estimate/hybrid",
                 "required": ["foto", "raça", "porte"],
@@ -86,13 +111,20 @@ class PesaBoiHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:
         path = urlparse(self.path).path
-        if path not in {"/api/estimate/morphometry", "/api/estimate/hybrid", "/api/estimate/two-photo-ellipse"}:
+        agro_paths = {"/api/agro/ndvi", "/api/agro/pest-diagnosis", "/api/agro/embrapa/smartsolos"}
+        legacy_paths = {"/api/estimate/morphometry", "/api/estimate/hybrid", "/api/estimate/two-photo-ellipse"}
+        if path not in legacy_paths | agro_paths:
             send_json(self, 404, {"error": "Endpoint não encontrado."})
             return
         try:
-            payload = json.loads(self.read_body().decode("utf-8"))
+            max_bytes = 10 * 1024 * 1024 if path == "/api/agro/pest-diagnosis" else (4 * 1024 * 1024 if path in {"/api/agro/ndvi", "/api/agro/embrapa/smartsolos"} else MAX_REQUEST_BYTES)
+            payload = json.loads(self.read_body(max_bytes).decode("utf-8"))
             if not isinstance(payload, dict):
-                raise ValueError("Envie um objeto JSON com calibração, landmarks e fatias de profundidade.")
+                raise ValueError("Envie um objeto JSON válido.")
+            if path in agro_paths:
+                status, result = agro_services.post_response(path, payload)
+                send_json(self, status, result)
+                return
             result = (estimate_hybrid(payload) if path == "/api/estimate/hybrid" else estimate_two_photo_ellipse(payload.get("depth_cm"), payload.get("width_cm")) if path == "/api/estimate/two-photo-ellipse" else estimate_morphometry(payload))
             send_json(self, 200, result)
         except ValueError as exc:

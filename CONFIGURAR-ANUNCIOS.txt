@@ -1,4 +1,4 @@
-PESABOI 3.12 — GOOGLE ADSENSE
+PESABOI 3.16 — GOOGLE ADSENSE
 
 O QUE JÁ FOI CONFIGURADO
 - O snippet de verificação da sua conta foi colocado dentro de <head> em index.html.

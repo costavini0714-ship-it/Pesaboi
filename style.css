@@ -188,3 +188,84 @@ body.has-measurement .topbar{background:linear-gradient(105deg,#1b3344,#2d4654)}
 .ad-placement{max-width:970px;min-height:90px;margin:22px auto 8px;padding:10px 12px;border:1px solid #ffffff40;border-radius:12px;background:rgba(246,249,247,.94);box-shadow:0 7px 22px #0b243722;text-align:center;overflow:hidden}.ad-disclosure{display:block;margin:0 0 6px;color:#65736e;font-size:9px;font-weight:800;letter-spacing:1px}.ad-slot{width:100%;min-height:50px}.ad-slot ins.adsbygoogle{display:block;min-height:50px;max-width:100%;margin:auto}
 .ads-consent{position:fixed;z-index:1000;left:16px;right:16px;bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:980px;margin:auto;padding:16px 18px;border:1px solid #cadbce;border-radius:14px;background:#fff;box-shadow:0 16px 48px #071b2a55;color:#263c45}.ads-consent.hidden{display:none}.ads-consent-copy{min-width:0}.ads-consent-copy strong{font-size:13px;color:#1d5635}.ads-consent-copy p{margin:5px 0 0;font-size:11px;line-height:1.5;color:#566970}.ads-consent-copy a{color:#237749;font-weight:800}.ads-consent-actions{display:flex;gap:8px;flex-shrink:0}.ads-consent-actions button{min-height:38px;padding:8px 12px;font-size:11px}.footer a,.footer-preferences{color:#e7f2ea;text-decoration:underline;text-underline-offset:3px}.footer-preferences{border:0;background:transparent;font:inherit;font-size:inherit;cursor:pointer}
 @media(max-width:650px){.premium-card{grid-template-columns:1fr;gap:10px;padding:15px}.premium-status{justify-self:start;grid-row:1}.premium-card-copy{grid-row:2}.premium-action{grid-row:3}.ads-consent{left:9px;right:9px;bottom:9px;display:block;padding:13px}.ads-consent-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:11px}.ads-consent-actions button{width:100%;min-height:42px}.ad-placement{margin-top:17px;padding:8px}}
+
+/* Central Agro e GPS Agrônomo — PesaBoi 3.16 */
+.central-heading{color:#fff;margin:18px 0 24px}.central-heading h1{font-size:clamp(30px,4vw,44px);margin:7px 0;color:#fff}.central-heading p{color:#e8f0f2;margin:0}.central-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.central-card{min-height:250px;text-align:left;border:1px solid #ffffff55;border-radius:19px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;box-shadow:0 14px 35px #0c253b55;backdrop-filter:blur(12px);cursor:pointer;transition:transform .18s,box-shadow .18s}.central-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px #0c253b66}.central-cattle{background:linear-gradient(145deg,#173b32ed,#25694bdf);color:white}.central-gps{background:linear-gradient(145deg,#17384bed,#28617cdf);color:white}.central-future{background:#f2f7f3ed;color:#29443a;border-style:dashed}.central-icon{font-size:38px}.central-card .eyebrow{color:#c5e5d1}.central-card strong{font-size:25px}.central-card small{font-size:13px;line-height:1.55;opacity:.9}.central-open{margin-top:auto;font-weight:800;color:#f3c18f}.central-future .central-open{color:#277a4b}.central-summary{margin-top:22px;padding:16px 19px;border-radius:14px;background:#f5faf2ed;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.central-summary span{font-size:10px;font-weight:800;letter-spacing:1px;color:#387b52}.central-summary strong{color:#203f30}.central-summary small{color:#66766d;margin-left:auto}.central-return{display:block;margin-bottom:12px;border:1px solid #ffffff66;background:#18394bdb;color:white;padding:8px 13px;border-radius:9px;font-weight:750;cursor:pointer}
+.gps-screen{color:#183344}.gps-topline{display:flex;align-items:center;gap:18px;flex-wrap:wrap;color:#fff;margin:10px 0 18px}.gps-topline h1{font-size:clamp(27px,4vw,38px);margin:3px 0}.gps-topline p{margin:0;color:#e4edf0}.gps-back{border:1px solid #ffffff77;border-radius:10px;padding:10px 13px;background:#173c50e8;color:white;font-weight:750;cursor:pointer}.gps-status{margin-left:auto;padding:7px 11px;border-radius:30px;background:#e7f6eb;color:#1e7544;font-size:11px;font-weight:800}.gps-tabs{display:flex;gap:7px;overflow:auto;padding:8px 0 13px;position:sticky;top:0;z-index:4;backdrop-filter:blur(12px)}.gps-tabs button{white-space:nowrap;border:1px solid #ffffff66;border-radius:9px;background:#f2f8f4ed;color:#244638;padding:10px 13px;font-weight:750;cursor:pointer}.gps-tabs button.active{background:#1e7047;color:#fff;border-color:#1e7047}.gps-panel{display:block}.gps-panel.hidden{display:none}.gps-notice{padding:11px 14px;margin:8px 0 14px;border-radius:10px;background:#fff5df;color:#74501b;border:1px solid #ead19c;font-size:13px}.gps-metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:10px 0 16px}.gps-metric-grid article,.gps-card{background:#f7fbf8ed;border:1px solid #d4e6d9;border-radius:15px;padding:17px;box-shadow:0 8px 24px #102f3b1a}.gps-metric-grid small,.gps-card .eyebrow{display:block;color:#47805c;font-size:10px;font-weight:850;letter-spacing:1px}.gps-metric-grid strong{display:block;font-size:25px;color:#1b5135;margin:7px 0}.gps-metric-grid span{font-size:11px;color:#64756b}.gps-two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}.gps-card h2,.gps-card h3{margin:6px 0 12px;color:#1b4933}.gps-card p{color:#5c7065;font-size:13px;line-height:1.55}.gps-card label{display:flex;flex-direction:column;gap:6px;color:#365847;font-size:12px;font-weight:750;margin:10px 0}.gps-card input,.gps-card select{width:100%;min-height:40px;padding:9px 10px;border:1px solid #c8d9ce;border-radius:8px;background:#fff;color:#203a30}.gps-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.gps-primary,.gps-secondary,.gps-small-danger{border:0;border-radius:9px;padding:10px 13px;font-weight:800;cursor:pointer}.gps-primary{background:#21784b;color:#fff}.gps-secondary{background:#e7f1ea;color:#28583b;border:1px solid #c8ddce}.gps-primary:disabled,.gps-secondary:disabled{opacity:.45;cursor:not-allowed}.gps-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.gps-levels>div{background:#eaf4ed;border-radius:10px;padding:13px;display:flex;flex-direction:column;gap:7px}.gps-levels b{color:#22633e}.gps-levels span{font-size:12px;color:#5b7063;line-height:1.5}.gps-section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:12px 0}.gps-section-head h2{margin:3px 0;color:#fff}.gps-section-head p{margin:3px 0;color:#eaf1ed;font-size:12px}.agro-map{width:100%;height:420px;min-height:320px;border-radius:15px;overflow:hidden;border:1px solid #c6d9cb;background:linear-gradient(135deg,#dce9dc,#c7d9ce)}.gps-map-host{margin-top:14px}.gps-map-small .agro-map{height:340px}.gps-map-legend{display:flex;gap:18px;flex-wrap:wrap;color:#eaf3ed;font-size:11px;padding:10px 2px}.gps-map-legend span:first-child{color:#ffd4a8}.gps-map-legend span:nth-child(2){color:#f8c38d}.gps-map-legend span:nth-child(3){color:#a8e2b7}.gps-map-legend span:nth-child(4){color:#b8d0ff}.gps-form-row{display:flex;align-items:end;gap:14px;flex-wrap:wrap}.gps-form-row label{min-width:220px}.gps-check{flex-direction:row!important;align-items:center}.gps-check input{width:auto;min-height:0}.gps-list{display:grid;gap:8px;margin-top:14px}.gps-list-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f7fbf8ed;border:1px solid #d4e6d9;border-radius:11px;padding:13px 15px}.gps-list-card>div{display:flex;flex-direction:column;gap:4px}.gps-list-card strong{color:#204a34}.gps-list-card small,.gps-empty{color:#687b70;font-size:12px}.gps-small-danger{background:#fff0ed;color:#a23b2b;padding:7px 10px}.gps-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gps-warning{font-size:11px;color:#fff0d7;background:#654a2bca;padding:11px 13px;border-radius:10px;line-height:1.55}.gps-calc-result{margin-top:14px;background:#e6f4e9;border:1px solid #b9ddc2;border-radius:11px;padding:15px;font-size:20px;font-weight:850;color:#1d6a3e}.gps-card>strong{font-size:15px;color:#1d4b32;overflow-wrap:anywhere}
+@media(max-width:800px){.central-grid{grid-template-columns:1fr 1fr}.central-future{grid-column:1/-1}.gps-metric-grid{grid-template-columns:1fr 1fr}.gps-levels{grid-template-columns:1fr}.gps-form-grid{grid-template-columns:1fr 1fr}.gps-tabs{top:0}}
+@media(max-width:560px){.central-grid,.gps-two-col{grid-template-columns:1fr}.central-card{min-height:205px}.central-summary small{margin-left:0;width:100%}.gps-topline{align-items:flex-start}.gps-status{margin-left:0}.gps-metric-grid{gap:8px}.gps-metric-grid article{padding:12px}.gps-metric-grid strong{font-size:21px}.gps-form-grid{grid-template-columns:1fr}.agro-map{height:340px;min-height:280px}.gps-section-head{align-items:flex-start;flex-direction:column}.gps-tabs button{padding:9px 11px;font-size:11px}.gps-form-row{display:block}}
+
+
+/* PesaBoi 3.16 — captura nativa alternativa e permissões resilientes */
+.camera-permission-panel{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:14px 0;padding:16px 18px;border:1px solid #b9d9c3;border-radius:14px;background:#f1f8f2;color:#203a30;box-shadow:0 8px 22px #102f3b12}
+.camera-permission-panel strong{display:block;color:#1c6139;font-size:16px;margin-bottom:5px}
+.camera-permission-panel p{margin:0 0 5px;color:#365448;font-size:13px;line-height:1.5}
+.camera-permission-panel small{color:#63766b;font-size:11px;line-height:1.45}
+.camera-permission-actions{display:flex;flex:0 0 auto;gap:8px;flex-wrap:wrap}.camera-permission-actions button{white-space:nowrap}
+.gps-consent-card{margin:10px 0 16px;padding:17px 19px;border-radius:15px;border:1px solid #d8e7d9;background:#f7fbf8ed;box-shadow:0 8px 24px #102f3b1a;color:#244638}
+.gps-consent-copy h2{margin:5px 0 8px;color:#1b4933;font-size:19px}
+.gps-consent-copy p{margin:7px 0;color:#405b4b;font-size:13px;line-height:1.55}
+.gps-consent-copy .gps-consent-detail{font-size:11px;color:#65776b}
+.gps-consent-check{display:flex;align-items:flex-start;gap:9px;margin:13px 0;color:#234b36;font-size:13px;font-weight:750;line-height:1.5}
+.gps-consent-check input{flex:0 0 auto;width:18px;height:18px;margin:1px 0 0;accent-color:#21784b}
+.gps-consent-card .gps-actions{align-items:center}
+.gps-consent-card .gps-actions small{flex:1 1 240px;color:#617468;font-size:11px;line-height:1.4}
+@media(max-width:640px){.camera-permission-panel{align-items:stretch;flex-direction:column}.camera-permission-actions{display:grid;grid-template-columns:1fr}.camera-permission-actions button{width:100%}.gps-consent-card{padding:14px}.gps-consent-card .gps-actions button{width:100%}}
+
+/* Central Agro 3.19 — módulos de análise agronômica */
+.central-tool{background:linear-gradient(145deg,#163d42ed,#28745fdf);color:#fff;border-color:#b6e3ce66}
+.central-tool:nth-of-type(4n){background:linear-gradient(145deg,#254b43ed,#4a8061df)}
+.central-tool .eyebrow{color:#d7f2e2}
+.agro-lab-screen{color:#183344}
+.agro-tool-tabs{display:flex;gap:7px;overflow:auto;padding:8px 0 13px;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.agro-tool-tabs button{white-space:nowrap;border:1px solid #ffffff66;border-radius:9px;background:#f2f8f4ed;color:#244638;padding:10px 13px;font-weight:750;cursor:pointer}
+.agro-tool-tabs button.active{background:#1e7047;color:#fff;border-color:#1e7047}
+.agro-panel{display:block}.agro-panel.hidden{display:none}
+.agro-module-heading{margin:10px 0 16px;color:#fff}.agro-module-heading h2{font-size:clamp(22px,3vw,29px);margin:4px 0;color:#fff}.agro-module-heading p{color:#e8f1eb;font-size:13px;margin:4px 0}
+.agro-panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0}
+.agro-analysis-map{height:480px;margin:14px 0}
+.agro-result{margin-top:13px;padding:13px 15px;border-radius:10px;border:1px solid #cbded1;background:#f2f8f3;color:#234b34;font-size:13px;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.agro-table-wrap{overflow-x:auto;margin-top:12px}
+.agro-data-table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:9px;overflow:hidden}
+.agro-data-table th,.agro-data-table td{padding:9px 10px;border-bottom:1px solid #e0e9e2;text-align:left;white-space:nowrap}
+.agro-data-table th{background:#e7f1e9;color:#28583b}
+.agro-link-button{display:inline-flex;align-items:center;text-decoration:none;font-size:12px}
+.agro-source-links{display:flex;gap:15px;flex-wrap:wrap;padding:10px 2px}.agro-source-links a{color:#f5d2a7;font-weight:750;font-size:12px}
+.agro-geotiff-card{margin:14px 0}
+.pest-preview-wrap{margin:14px 0;max-width:420px;max-height:320px;overflow:hidden;border-radius:12px;background:#e9efe9}
+.pest-preview-wrap img{display:block;max-width:100%;max-height:320px;object-fit:contain;margin:auto}
+.ol-zoom{top:.6em;left:.6em}.ol-scale-line{background:#ffffffdc;border-radius:5px;bottom:.7em;left:.7em}.ol-scale-line-inner{border-color:#244b39;color:#244b39}
+@media(max-width:800px){.agro-panel-grid{grid-template-columns:1fr}.agro-analysis-map{height:390px}}
+@media(max-width:560px){.agro-analysis-map{height:330px;min-height:290px}.agro-tool-tabs button{padding:9px 10px;font-size:11px}}
+
+
+/* PesaBoi 3.19 — gerenciador unificado e seguro de integrações */
+.central-integrations{background:linear-gradient(145deg,#234657ed,#357b72df);color:#fff;border-color:#b6e3ce66}
+.integrations-screen{color:#183344}
+.integration-intro,.integration-form,.integration-import-guide{margin:14px 0;color:#244638}
+.integration-intro h2,.integration-import-guide h2{margin:4px 0 8px;color:#1d4d38}
+.integration-intro p,.integration-import-guide p,.integration-import-guide li{font-size:13px;line-height:1.6;color:#4a6357}
+.integration-status-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:18px 0 10px;color:#fff}
+.integration-status-head h2{margin:4px 0;color:#fff}
+.integration-status-head p{margin:4px 0;color:#e5f0e9;font-size:12px}
+.integration-status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 16px}
+.integration-status-card{background:#f7fbf8;border:1px solid #d5e5da;border-radius:12px;padding:13px;color:#234b36;min-width:0}
+.integration-status-card strong{display:block;font-size:13px;margin-bottom:5px}
+.integration-status-card small{display:block;color:#687b70;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.integration-status-pill{display:inline-flex;margin-top:8px;border-radius:20px;padding:4px 8px;background:#edf1ee;color:#58675e;font-size:10px;font-weight:800}
+.integration-status-pill.ready{background:#dff4e5;color:#17643b}
+.integration-status-pill.public{background:#e6effb;color:#315c91}
+.integration-form{display:grid;gap:10px}
+.integration-section-title{margin-top:5px}
+.integration-section-title h2{font-size:19px;margin:4px 0;color:#1d4d38}
+.integration-section-title p{font-size:12px;color:#62756b;margin:4px 0 10px;line-height:1.5}
+.integration-form label{display:block;font-size:12px;font-weight:750;color:#315442}
+.integration-form input,.integration-form textarea{display:block;width:100%;margin-top:5px;padding:11px;border:1px solid #cbdcd1;border-radius:9px;background:#fbfdfb;color:#203a2d;font:inherit;font-size:13px;box-sizing:border-box}
+.integration-form textarea{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;resize:vertical;min-height:120px}
+.integration-form input:focus,.integration-form textarea:focus{outline:2px solid #87bd9b;outline-offset:1px}
+.integration-divider{height:1px;background:#dce8df;margin:10px 0}
+.integration-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+.integration-import-guide ol{padding-left:21px}
+.integration-import-guide a{color:#176c46;font-weight:750}
+.integration-import-guide code,.integration-intro code{background:#eaf2ed;padding:2px 5px;border-radius:4px;font-family:ui-monospace,monospace}
+@media(max-width:620px){.integration-status-grid{grid-template-columns:1fr}.integration-status-head{align-items:flex-start;flex-direction:column}.integration-actions{display:grid;grid-template-columns:1fr}.integration-actions button{width:100%}}
