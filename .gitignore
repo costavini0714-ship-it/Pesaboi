@@ -1,34 +1,43 @@
-# Segredos locais
+# ================================
+# Central Agro / PesaBoi
+# Nunca envie credenciais ao GitHub.
+# ================================
 .env
 .env.*
+!.env.example
+central-agro.env
+*.secrets.env
 
-# Python
+# Backups antigos, pacotes ZIP e artefatos locais
+backup/
+**/backup/
+*.zip
+*.7z
+*.rar
+
+# Ambientes e caches Python
 __pycache__/
 *.py[cod]
 .venv/
 venv/
+env/
+.pytest_cache/
+.mypy_cache/
 
-# Dados de execução e bancos locais
+# Banco e dados locais
 data/
 *.sqlite
 *.sqlite3
 *.db
 
-# Editor e sistema
+# Logs, temporários e arquivos de editor/sistema
+*.log
+*.tmp
+*.bak
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-*.log
-*.tmp
-*.bak
 
-# Exportações locais
+# Exportações de usuário
 PesaBoi-backup-*.json
-
-# Keep the safe template visible in the repository
-!.env.example
-
-# Arquivo local exportado pelo Gerenciador Central Agro
-central-agro.env
-*.secrets.env

@@ -3,7 +3,7 @@
 ## O que é
 O gateway (`server.py` + `agro_services.py`) é a porta única do PesaBoi para os serviços externos. Os módulos chamam o próprio servidor; ele encaminha cada solicitação ao fornecedor correspondente.
 
-O gerenciador central facilita a configuração: reúne credenciais num arquivo `central-agro.env`, gerado no navegador sem enviar os valores ao servidor. O Render importa esse arquivo em lote.
+O gerenciador central facilita a configuração: reúne credenciais num arquivo `central-agro.env`, gerado no navegador sem enviar os valores ao servidor. O arquivo `central-agro.env` também acompanha este ZIP como modelo vazio na raiz da pasta `central.agro`; preencha-o ou gere uma versão preenchida pelo gerenciador. O Render importa esse arquivo em lote.
 
 ## Configurar
 1. Abra o site PesaBoi e entre na Central Agro.
@@ -11,10 +11,11 @@ O gerenciador central facilita a configuração: reúne credenciais num arquivo 
 3. Google Earth Engine: informe o ID do projeto e cole o JSON completo da conta de serviço. O navegador verifica a estrutura e converte para Base64.
 4. Embrapa: informe o token AgroAPI depois de inscrever a aplicação em Agritec/ClimAPI/SmartSolos, conforme necessário.
 5. Hugging Face: informe o HTTPS do Inference Endpoint ativo e o token com permissão de inferência.
-6. Clique em **Gerar arquivo único para Render**.
-7. No Render Dashboard, selecione o serviço PesaBoi → **Environment** → **Add from .env**. Selecione `central-agro.env`.
-8. Salve com deploy e aguarde a publicação.
-9. Volte ao PesaBoi, abra Central de Integrações e atualize o status.
+6. Clique em **Gerar arquivo único para Render**. O download terá exatamente o nome `central-agro.env`. Se não conseguir usar o gerador, há um modelo na pasta raiz do projeto que pode ser aberto por `EDITAR-CENTRAL-AGRO-ENV.bat`.
+7. Não envie `central-agro.env` ao GitHub. O `.gitignore` já o ignora em operações Git. Se enviar arquivos pelo site do GitHub, deixe esse arquivo de fora.
+8. No Render Dashboard, selecione o serviço PesaBoi → **Environment** → **Add from .env**. Selecione `central-agro.env`.
+9. Salve com deploy e aguarde a publicação.
+10. Volte ao PesaBoi, abra Central de Integrações e atualize o status.
 
 ## Credenciais e segurança
 - O formulário não envia credenciais ao PesaBoi, não usa localStorage e não persiste os campos.

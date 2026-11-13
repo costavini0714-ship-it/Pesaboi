@@ -228,3 +228,12 @@ O OpenLayers utiliza `Draw`/`Modify` nativos. Geoman não é incluído porque é
 5. Após o deploy, retorne à Central de Integrações e atualize o status. Faça também uma consulta real em cada módulo: status de credenciais não substitui teste de autenticação.
 
 **Limitação:** não existe uma chave mestra universal capaz de criar contas ou autorizações no Google, Embrapa e Hugging Face. O assistente unifica o preenchimento e a importação, mas cada fornecedor ainda exige sua própria credencial e condições de uso.
+
+## Pacote organizado `central.agro`
+
+O ZIP de distribuição mantém todos os arquivos ativos dentro da pasta `central.agro/`.
+O arquivo `central-agro.env` está incluído na raiz como modelo vazio para facilitar a
+localização; preencha-o antes de importar no Render. Não o envie ao GitHub: o `.gitignore`
+o exclui automaticamente nos fluxos Git. Ao usar o envio manual de arquivos do GitHub,
+deixe `central-agro.env` fora do envio. Backups antigos foram removidos do pacote de
+publicação para evitar misturar versões.

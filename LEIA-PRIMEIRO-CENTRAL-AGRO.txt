@@ -1,0 +1,24 @@
+PESABOI 3.19 — CENTRAL AGRO
+===========================
+
+1) Esta pasta central.agro contem o projeto completo para GitHub e Render.
+2) O arquivo central-agro.env ja esta aqui na raiz desta pasta.
+3) Abra-o com EDITAR-CENTRAL-AGRO-ENV.bat ou com o Bloco de Notas.
+4) Preencha apenas as credenciais dos servicos que voce realmente configurou.
+5) Para Earth Engine, use o Gerenciador Central de Integracoes do site para gerar
+   GEE_SERVICE_ACCOUNT_JSON_B64. Nao cole o JSON original sem codificacao nessa variavel.
+6) No Render: servico PesaBoi > Environment > Add from .env > selecione
+   central-agro.env > Save Changes / Deploy.
+7) NAO envie central-agro.env ao GitHub. O .gitignore ja o marca como ignorado.
+   Ao enviar os arquivos manualmente pelo site do GitHub, deixe esse arquivo de fora.
+8) Envie para GitHub os demais arquivos e pastas que estao dentro de central.agro.
+9) Nao inclua os backups antigos; eles foram removidos deste pacote para evitar
+   misturar versoes anteriores com a versao atual.
+
+IMPORTANTE
+- O central-agro.env incluído e um MODELO vazio. Preencha antes de importar.
+- Nao coloque chaves reais em README, HTML, JavaScript ou no repositorio.
+- Open-Meteo, NASA POWER e camadas cartograficas publicas nao usam as chaves
+  privadas listadas neste arquivo, mas continuam sujeitas a limites e licencas.
+- Preencher credenciais nao garante que o fornecedor autorizou a conta; teste
+  cada integracao depois do deploy.
