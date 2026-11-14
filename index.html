@@ -2,446 +2,2851 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#20394a">
-  <meta name="description" content="PesaBoi: análise visual automática de bovinos e estimativa matemática experimental.">
-  <!-- Google AdSense: código de verificação do site -->
-  <script async data-pesaboi-adsense="true"
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3842159038545616"
-    crossorigin="anonymous"
-    onload="this.dataset.loaded='true'"
-    onerror="this.dataset.failed='true'"></script>
-  <title>PesaBoi | Gestão do rebanho</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23123d2a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='60'%3E🐂%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=3.19">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123d2b">
+  <title>PesaBoi | Gestão inteligente do rebanho</title>
+
+  <style>
+    :root {
+      --green-950: #102d22;
+      --green-900: #123d2b;
+      --green-800: #185239;
+      --green-700: #236b48;
+      --green-600: #31875b;
+      --green-500: #45a66e;
+      --green-100: #e5f3e9;
+      --green-50: #f3faf4;
+      --lime: #d8ed9a;
+      --cream: #f7f8f2;
+      --white: #ffffff;
+      --ink: #20352a;
+      --muted: #718078;
+      --line: #e4ebe5;
+      --orange: #bd7433;
+      --orange-bg: #fff4e6;
+      --red: #b94b43;
+      --red-bg: #fff0ee;
+      --shadow: 0 14px 40px rgba(23, 62, 42, .08);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 90% 0%, rgba(216,237,154,.20), transparent 28rem),
+        var(--cream);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid rgba(69,166,110,.35);
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 254px;
+      flex: 0 0 254px;
+      min-height: 100vh;
+      padding: 27px 18px;
+      background: linear-gradient(180deg, var(--green-950), #174a34);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 2px 9px 28px;
+    }
+
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--green-950);
+      background: var(--lime);
+      font-size: 23px;
+      box-shadow: 0 7px 18px rgba(0,0,0,.13);
+    }
+
+    .brand-name {
+      font-size: 21px;
+      font-weight: 850;
+      letter-spacing: -.7px;
+    }
+
+    .brand-subtitle {
+      margin-top: 3px;
+      color: #b8d4c1;
+      font-size: 10px;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+
+    .nav-caption {
+      padding: 12px 12px 9px;
+      color: #9ebba8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav-button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 14px;
+      border: 0;
+      border-radius: 14px;
+      color: #d1e3d7;
+      background: transparent;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 650;
+      transition: background .2s, transform .2s, color .2s;
+    }
+
+    .nav-button:hover {
+      background: rgba(255,255,255,.09);
+      transform: translateX(2px);
+    }
+
+    .nav-button.active {
+      color: var(--green-950);
+      background: var(--lime);
+      box-shadow: 0 8px 22px rgba(0,0,0,.12);
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 17px 12px 5px;
+      color: #b8d4c1;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .sidebar-bottom strong {
+      display: block;
+      color: white;
+      font-size: 12px;
+    }
+
+    .main-area {
+      min-width: 0;
+      flex: 1;
+      padding: 28px clamp(18px, 4vw, 55px) 55px;
+    }
+
+    .topbar {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .page-heading {
+      margin: 0;
+      color: var(--green-950);
+      font-size: clamp(22px, 3vw, 29px);
+      font-weight: 850;
+      letter-spacing: -.8px;
+    }
+
+    .page-description {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .date-chip {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: var(--muted);
+      background: rgba(255,255,255,.8);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .icon-button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: white;
+      color: var(--green-800);
+      font-size: 18px;
+    }
+
+    .view {
+      display: none;
+      animation: pageIn .35s ease both;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      min-height: 258px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: clamp(25px, 4vw, 43px);
+      border-radius: 28px;
+      color: white;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(216,237,154,.18), transparent 19rem),
+        linear-gradient(115deg, #123d2b 0%, #216644 65%, #398456 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "🐂";
+      position: absolute;
+      right: 7%;
+      bottom: -27px;
+      opacity: .16;
+      font-size: clamp(120px, 20vw, 230px);
+      transform: rotate(-8deg);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 590px;
+    }
+
+    .eyebrow {
+      margin: 0 0 13px;
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .hero h2 {
+      max-width: 530px;
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -1.4px;
+    }
+
+    .hero p {
+      max-width: 490px;
+      margin: 14px 0 23px;
+      color: #d6e9dc;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .soft-button,
+    .danger-button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 13px;
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform .2s, box-shadow .2s, background .2s;
+    }
+
+    .primary-button {
+      color: var(--green-950);
+      background: var(--lime);
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover,
+    .soft-button:hover,
+    .danger-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .secondary-button {
+      color: white;
+      background: var(--green-800);
+    }
+
+    .soft-button {
+      color: var(--green-800);
+      background: var(--green-100);
+    }
+
+    .danger-button {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .button-full {
+      width: 100%;
+    }
+
+    .button-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin: 31px 0 15px;
+    }
+
+    .section-heading h3 {
+      margin: 0;
+      color: var(--green-950);
+      font-size: 18px;
+      letter-spacing: -.4px;
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric-card {
+      min-height: 125px;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: white;
+      box-shadow: 0 6px 22px rgba(23,62,42,.035);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .metric-icon {
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--green-50);
+      color: var(--green-700);
+      font-size: 17px;
+    }
+
+    .metric-value {
+      margin-top: 13px;
+      color: var(--green-950);
+      font-size: 27px;
+      font-weight: 850;
+      letter-spacing: -.8px;
+    }
+
+    .metric-note {
+      margin-top: 3px;
+      color: #8a968e;
+      font-size: 11px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 15px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 6px 22px rgba(23,62,42,.035);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .panel-title h3 {
+      margin: 0;
+      color: var(--green-950);
+      font-size: 15px;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .empty-state {
+      min-height: 125px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state .empty-icon {
+      margin-bottom: 9px;
+      font-size: 27px;
+    }
+
+    .empty-state strong {
+      color: var(--green-800);
+      font-size: 13px;
+    }
+
+    .empty-state p {
+      max-width: 330px;
+      margin: 6px 0 0;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 15px 16px;
+      border: 1px solid #f0dfc7;
+      border-radius: 15px;
+      color: #805526;
+      background: var(--orange-bg);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 2px;
+      color: #75471c;
+    }
+
+    .notice-icon {
+      font-size: 19px;
+    }
+
+    .subtle-text {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 10px;
+      color: var(--green-700);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-500);
+      box-shadow: 0 0 0 4px var(--green-100);
+    }
+
+    .weigh-intro {
+      max-width: 760px;
+      margin-bottom: 20px;
+    }
+
+    .weigh-intro h2 {
+      margin: 0 0 8px;
+      color: var(--green-950);
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: -.9px;
+    }
+
+    .weigh-intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .weigh-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(270px, .85fr);
+      gap: 17px;
+      align-items: start;
+    }
+
+    .camera-card {
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .camera-stage {
+      min-height: 315px;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      background:
+        radial-gradient(circle at center, #426a50 0, #213f30 58%, #142b20 100%);
+    }
+
+    .camera-placeholder {
+      max-width: 330px;
+      padding: 25px;
+      color: white;
+      text-align: center;
+    }
+
+    .camera-placeholder .camera-emoji {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 59px;
+      animation: gentleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    .camera-placeholder strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .camera-placeholder p {
+      margin: 8px 0 0;
+      color: #d5e4d9;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    #cameraVideo,
+    #photoPreview {
+      width: 100%;
+      height: 100%;
+      min-height: 315px;
+      max-height: 490px;
+      object-fit: contain;
+      background: #101c15;
+    }
+
+    #cameraVideo {
+      position: absolute;
+      inset: 0;
+    }
+
+    .frame-guide {
+      position: absolute;
+      inset: 12% 9%;
+      border: 2px dashed rgba(216,237,154,.85);
+      border-radius: 18px;
+      pointer-events: none;
+      box-shadow: 0 0 0 999px rgba(0,0,0,.08);
+    }
+
+    .frame-guide::before {
+      content: "Enquadre o animal inteiro";
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      padding: 5px 10px;
+      border-radius: 20px;
+      color: var(--green-950);
+      background: var(--lime);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+
+    .frame-corner {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: var(--lime);
+      border-style: solid;
+    }
+
+    .frame-corner.tl { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-radius: 8px 0 0; }
+    .frame-corner.tr { top: -2px; right: -2px; border-width: 4px 4px 0 0; border-radius: 0 8px 0 0; }
+    .frame-corner.bl { bottom: -2px; left: -2px; border-width: 0 0 4px 4px; border-radius: 0 0 0 8px; }
+    .frame-corner.br { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-radius: 0 0 8px; }
+
+    .camera-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .camera-toolbar button,
+    .camera-toolbar label {
+      flex: 1 1 145px;
+    }
+
+    .tips-card {
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      background: white;
+    }
+
+    .tips-card h3 {
+      margin: 0 0 15px;
+      color: var(--green-950);
+      font-size: 16px;
+    }
+
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf1ed;
+    }
+
+    .tip-item:last-child {
+      border-bottom: 0;
+    }
+
+    .tip-number {
+      width: 27px;
+      height: 27px;
+      flex: 0 0 27px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--green-800);
+      background: var(--green-100);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .tip-item strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--green-900);
+      font-size: 12px;
+    }
+
+    .tip-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .photo-ready {
+      display: none;
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 14px;
+      color: var(--green-800);
+      background: var(--green-50);
+      font-size: 12px;
+    }
+
+    .photo-ready.visible {
+      display: block;
+      animation: pageIn .3s ease both;
+    }
+
+    .analysis-box {
+      display: none;
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: white;
+    }
+
+    .analysis-box.visible {
+      display: block;
+      animation: pageIn .35s ease both;
+    }
+
+    .analysis-loading {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      color: var(--green-800);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .analysis-loading.visible {
+      display: flex;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--green-100);
+      border-top-color: var(--green-600);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .analysis-result {
+      display: none;
+    }
+
+    .analysis-result.visible {
+      display: block;
+      animation: pageIn .35s ease both;
+    }
+
+    .weight-unavailable {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 17px;
+      border: 1px solid #f0dfc7;
+      border-radius: 16px;
+      background: var(--orange-bg);
+    }
+
+    .weight-unavailable .big-icon {
+      font-size: 27px;
+    }
+
+    .weight-unavailable h3 {
+      margin: 0 0 5px;
+      color: #75471c;
+      font-size: 16px;
+    }
+
+    .weight-unavailable p {
+      margin: 0;
+      color: #805526;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .registration-box {
+      display: none;
+      margin-top: 18px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 21px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .registration-box.visible {
+      display: block;
+      animation: pageIn .4s ease both;
+    }
+
+    .registration-box h3 {
+      margin: 0 0 7px;
+      color: var(--green-950);
+      font-size: 20px;
+    }
+
+    .registration-box > p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: var(--green-900);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    .search-input {
+      width: 100%;
+      min-height: 45px;
+      padding: 11px 13px;
+      border: 1px solid #dfe8e1;
+      border-radius: 12px;
+      color: var(--ink);
+      background: #fbfdfb;
+      font-size: 13px;
+    }
+
+    .field input::placeholder,
+    .search-input::placeholder {
+      color: #9aa69e;
+    }
+
+    .field small {
+      color: #87948c;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .registration-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .search-wrap {
+      width: min(100%, 350px);
+    }
+
+    .search-input {
+      background: white;
+    }
+
+    .animal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 15px;
+    }
+
+    .animal-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: white;
+      box-shadow: 0 6px 22px rgba(23,62,42,.035);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .animal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .animal-photo {
+      height: 155px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--green-700);
+      background: linear-gradient(135deg, #e7f3e8, #d5e8d8);
+      font-size: 42px;
+    }
+
+    .animal-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .animal-card-content {
+      padding: 15px;
+    }
+
+    .animal-card h3 {
+      overflow-wrap: anywhere;
+      margin: 0 0 5px;
+      color: var(--green-950);
+      font-size: 15px;
+    }
+
+    .animal-meta {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .animal-status {
+      display: inline-flex;
+      margin-top: 11px;
+      padding: 6px 9px;
+      border-radius: 20px;
+      color: var(--orange);
+      background: var(--orange-bg);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .animal-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .animal-actions button {
+      min-height: 34px;
+      flex: 1;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--green-800);
+      background: var(--green-50);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .record-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: white;
+    }
+
+    .record-avatar {
+      width: 43px;
+      height: 43px;
+      flex: 0 0 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--green-100);
+      font-size: 20px;
+    }
+
+    .record-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .record-main strong {
+      display: block;
+      color: var(--green-950);
+      font-size: 13px;
+    }
+
+    .record-main span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .record-value {
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .care-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(270px,.75fr);
+      gap: 17px;
+      align-items: start;
+    }
+
+    .reminder-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .reminder-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+
+    .reminder-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--green-600);
+    }
+
+    .reminder-item.done {
+      opacity: .58;
+    }
+
+    .reminder-item.done strong {
+      text-decoration: line-through;
+    }
+
+    .reminder-text {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .reminder-text strong {
+      display: block;
+      color: var(--green-950);
+      font-size: 12px;
+    }
+
+    .reminder-text span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .form-panel h3 {
+      margin: 0 0 6px;
+      color: var(--green-950);
+      font-size: 17px;
+    }
+
+    .form-panel > p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .form-panel .field {
+      margin-bottom: 13px;
+    }
+
+    .small-footnote {
+      margin-top: 15px;
+      color: #87948c;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 50;
+      max-width: min(390px, calc(100vw - 30px));
+      padding: 14px 17px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 13px;
+      color: white;
+      background: var(--green-950);
+      box-shadow: 0 15px 35px rgba(0,0,0,.2);
+      font-size: 12px;
+      line-height: 1.5;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity .25s, transform .25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .mobile-brand {
+      display: none;
+    }
+
+    .bottom-nav {
+      display: none;
+    }
+
+    @media (max-width: 1120px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+
+      .animal-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        width: 220px;
+        flex-basis: 220px;
+      }
+
+      .main-area {
+        padding: 23px 20px 40px;
+      }
+
+      .weigh-layout,
+      .care-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .app-shell {
+        display: block;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-area {
+        padding: 19px 14px 100px;
+      }
+
+      .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 19px;
+      }
+
+      .mobile-brand .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        font-size: 19px;
+      }
+
+      .mobile-brand strong {
+        color: var(--green-950);
+        font-size: 17px;
+      }
+
+      .mobile-brand span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 9px;
+      }
+
+      .topbar {
+        margin-bottom: 20px;
+      }
+
+      .date-chip {
+        display: none;
+      }
+
+      .hero {
+        min-height: 265px;
+        padding: 25px 21px;
+        border-radius: 22px;
+      }
+
+      .hero::after {
+        right: -5px;
+        bottom: -15px;
+        font-size: 125px;
+      }
+
+      .hero h2 {
+        font-size: 29px;
+      }
+
+      .hero p {
+        max-width: 290px;
+        font-size: 12px;
+      }
+
+      .metrics-grid {
+        gap: 9px;
+      }
+
+      .metric-card {
+        min-height: 110px;
+        padding: 13px;
+        border-radius: 15px;
+      }
+
+      .metric-value {
+        font-size: 23px;
+      }
+
+      .metric-top {
+        font-size: 10px;
+      }
+
+      .section-heading {
+        margin-top: 25px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .camera-card {
+        padding: 12px;
+      }
+
+      .camera-stage {
+        min-height: 255px;
+      }
+
+      #cameraVideo,
+      #photoPreview {
+        min-height: 255px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .animal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .animal-photo {
+        height: 190px;
+      }
+
+      .registration-box {
+        padding: 17px;
+      }
+
+      .bottom-nav {
+        position: fixed;
+        z-index: 30;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+        gap: 3px;
+        padding: 7px;
+        border: 1px solid rgba(255,255,255,.7);
+        border-radius: 19px;
+        background: rgba(255,255,255,.94);
+        box-shadow: 0 10px 35px rgba(20,55,36,.17);
+        backdrop-filter: blur(15px);
+      }
+
+      .bottom-nav button {
+        min-width: 0;
+        min-height: 55px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        border: 0;
+        border-radius: 13px;
+        color: #7a8980;
+        background: transparent;
+        font-size: 9px;
+        font-weight: 750;
+      }
+
+      .bottom-nav button span:first-child {
+        font-size: 18px;
+      }
+
+      .bottom-nav button.active {
+        color: var(--green-950);
+        background: var(--green-100);
+      }
+
+      .toast {
+        right: 14px;
+        bottom: 85px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
-  <header class="topbar">
-    <a class="brand" href="#central" data-go="central" aria-label="Central Agro">
-      <span class="brand-mark" aria-hidden="true">🐂</span>
-      <span class="brand-copy"><strong>CENTRAL<span> AGRO</span></strong><small>Ferramentas da propriedade</small></span>
-    </a>
-    <div class="topbar-right">
-      <span id="headerFarm" class="header-farm hidden"></span>
-      <button id="logout" class="text-button hidden" type="button">Sair da conta ↗</button>
-    </div>
-  </header>
+  <div class="app-shell">
 
-  <main id="mainContent">
-    <section id="login" class="screen login-screen">
-      <div class="login-intro">
-        <span class="eyebrow">CONTROLE DO REBANHO</span>
-        <h1>Bem-vindo à <span>Central Agro</span></h1>
-        <p>Acesse o PesaBoi e o GPS Agrônomo em uma plataforma rural.</p>
-      </div>
-      <form id="register" class="panel form-panel">
-        <div class="section-title"><span class="section-icon">♙</span><div><h2>Cadastro da propriedade</h2><p>Seus registros ficam separados neste dispositivo.</p></div></div>
-        <label for="owner">Seu nome <em>*</em></label>
-        <input id="owner" name="owner" required autocomplete="name" placeholder="Nome completo">
-        <div class="form-grid">
-          <div><label for="email">E-mail <small>(opcional)</small></label><input id="email" name="email" type="email" autocomplete="email" placeholder="seu@email.com"></div>
-          <div><label for="phone">Telefone <small>(opcional)</small></label><input id="phone" name="phone" autocomplete="tel" placeholder="(00) 00000-0000"></div>
-        </div>
-        <label for="farm">Nome da fazenda ou propriedade</label>
-        <input id="farm" name="farm" placeholder="Minha Fazenda">
-        <button class="primary-button full-width" type="submit">Entrar na Central Agro <span>→</span></button>
-        <p class="form-note">Somente o nome é obrigatório. E-mail e telefone são opcionais.</p>
-      </form>
-    </section>
-
-    <section id="central" class="screen hidden">
-      <div class="central-heading"><span class="eyebrow">PLATAFORMA RURAL</span><h1>Central Agro</h1><p id="centralHello">Todas as ferramentas da propriedade em um só lugar.</p></div>
-      <div class="central-grid">
-        <button id="openPesaboi" class="central-card central-cattle" type="button"><span class="central-icon">🐂</span><span class="eyebrow">PECUÁRIA</span><strong>PesaBoi</strong><small>Pesagem estimada, fichas, saúde e histórico do rebanho.</small><span class="central-open">Acessar módulo →</span></button>
-        <button id="openAgroGps" class="central-card central-gps" type="button"><span class="central-icon">🚜</span><span class="eyebrow">AGRICULTURA DE PRECISÃO</span><strong>GPS Agrônomo</strong><small>Talhões, hectares, orientação AB, máquinas e operações.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="satellite"><span class="central-icon">🛰️</span><span class="eyebrow">SENSORIAMENTO REMOTO</span><strong>Satélite e NDVI</strong><small>Sentinel-2, Google Earth Engine e vigor da vegetação.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="weather"><span class="central-icon">🌦️</span><span class="eyebrow">CLIMA E IRRIGAÇÃO</span><strong>Clima e Balanço Hídrico</strong><small>Previsão, chuva, evapotranspiração e água no solo.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="soil"><span class="central-icon">🧪</span><span class="eyebrow">PEDOLOGIA</span><strong>Solo e Zoneamento</strong><small>SoilGrids, Embrapa, análise laboratorial e ZARC.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="environment"><span class="central-icon">🌳</span><span class="eyebrow">GESTÃO AMBIENTAL</span><strong>Análise Ambiental</strong><small>SICAR, MapBiomas e TerraBrasilis / INPE.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="pasture"><span class="central-icon">🐄</span><span class="eyebrow">PASTAGENS E NUTRIÇÃO</span><strong>Pasto, Ração e Mercado</strong><small>Lotação animal, custo da dieta e cotações.</small><span class="central-open">Acessar módulo →</span></button>
-        <button class="central-card central-tool" type="button" data-agro-module="pests"><span class="central-icon">🌿</span><span class="eyebrow">DIAGNÓSTICO VISUAL</span><strong>Pragas por Foto</strong><small>Triagem de doenças e pragas usando imagem, sem sensores.</small><span class="central-open">Acessar módulo →</span></button>
-        <button id="openIntegrations" class="central-card central-tool central-integrations" type="button"><span class="central-icon">🔌</span><span class="eyebrow">CONFIGURAÇÃO UNIFICADA</span><strong>Central de Integrações</strong><small>Configure credenciais, gere um único arquivo para o Render e acompanhe o status das APIs.</small><span class="central-open">Configurar serviços →</span></button>
-      </div>
-      <div class="central-summary"><span>PROPRIEDADE ATIVA</span><strong id="centralFarm">Minha Fazenda</strong><small>Selecione um módulo para continuar.</small></div>
-    </section>
-
-
-    <section id="integrations" class="screen hidden integrations-screen">
-      <div class="gps-topline"><button class="gps-back" data-go="central" type="button">← Central Agro</button><div><span class="eyebrow">GERENCIADOR UNIFICADO</span><h1>Central de Integrações</h1><p>Um único assistente para reunir as credenciais dos serviços externos.</p></div><span id="integrationGatewayBadge" class="gps-status">Verificando gateway…</span></div>
-      <article class="gps-card integration-intro"><h2>Como funciona</h2><p>O PesaBoi já possui um gateway no servidor que encaminha as solicitações para os fornecedores. Preencha aqui apenas as credenciais que você já obteve. O botão gera um arquivo <code>central-agro.env</code> no seu computador; depois, importe-o uma única vez em <b>Render → Environment → Add from .env</b>.</p><p class="gps-warning">Não existe uma chave universal que substitua as contas do Google, Embrapa e Hugging Face. Este assistente reúne as chaves necessárias num único arquivo. Os valores digitados não são enviados ao PesaBoi, não são salvos no navegador e não são enviados ao GitHub por esta tela.</p></article>
-      <div class="integration-status-head"><div><span class="eyebrow">PAINEL DE STATUS</span><h2>Serviços no gateway</h2><p>O status indica se as credenciais estão presentes no servidor. A autenticação final deve ser confirmada com uma consulta real.</p></div><button id="refreshIntegrationStatus" class="gps-secondary" type="button">Atualizar status</button></div>
-      <div id="integrationStatusCards" class="integration-status-grid"><div class="gps-card">Consultando o gateway…</div></div>
-      <form id="integrationConfigForm" class="gps-card integration-form" autocomplete="off">
-        <div class="integration-section-title"><span class="eyebrow">1 · IMAGENS DE SATÉLITE</span><h2>Google Cloud / Earth Engine</h2><p>Use a conta de serviço criada no projeto Google Cloud registrado no Earth Engine. <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Abrir Google Cloud</a> · <a href="https://earthengine.google.com/" target="_blank" rel="noopener">Earth Engine</a></p></div>
-        <label for="intGeeProject">ID do projeto Google Cloud</label><input id="intGeeProject" autocomplete="off" spellcheck="false" placeholder="meu-projeto-earth-engine">
-        <label for="intGeeJson">Conteúdo completo do arquivo JSON da conta de serviço</label><textarea id="intGeeJson" rows="7" autocomplete="off" spellcheck="false" placeholder='Cole aqui o JSON completo baixado no Google Cloud. Não envie este conteúdo em mensagens.'></textarea>
-        <p class="form-help">O assistente valida a estrutura e converte o JSON para Base64 antes de gerar o arquivo. O servidor decodifica esse valor e autentica no Earth Engine.</p>
-        <div class="integration-divider"></div>
-        <div class="integration-section-title"><span class="eyebrow">2 · SOLO, ZARC E CLIMA</span><h2>Embrapa AgroAPI</h2><p>Um único token serve às APIs que você habilitar na aplicação AgroAPI. <a href="https://www.portal.agroapi.cnptia.embrapa.br/" target="_blank" rel="noopener">Abrir portal AgroAPI</a></p></div>
-        <label for="intEmbrapaToken">Token AgroAPI</label><input id="intEmbrapaToken" type="password" autocomplete="new-password" placeholder="Cole seu token da Embrapa">
-        <div class="integration-divider"></div>
-        <div class="integration-section-title"><span class="eyebrow">3 · DIAGNÓSTICO POR FOTO</span><h2>Hugging Face</h2><p>Informe o token de inferência e a URL HTTPS do endpoint dedicado ativo. <a href="https://huggingface.co/docs/inference-endpoints/quick_start" target="_blank" rel="noopener">Criar Inference Endpoint</a></p></div>
-        <label for="intHFEndpoint">URL HTTPS do Inference Endpoint</label><input id="intHFEndpoint" type="url" autocomplete="off" placeholder="https://seu-endpoint.endpoints.huggingface.cloud">
-        <label for="intHFToken">Token Hugging Face</label><input id="intHFToken" type="password" autocomplete="new-password" placeholder="hf_…">
-        <label for="intHFModel">Identificador do modelo (opcional)</label><input id="intHFModel" autocomplete="off" value="underdogquality/yolo11s-pest-detection">
-        <div class="integration-divider"></div>
-        <div class="integration-section-title"><span class="eyebrow">4 · CAMADAS PÚBLICAS</span><h2>Serviços sem chave privada</h2><p>Open-Meteo, NASA POWER, OpenStreetMap e camadas WMS públicas não precisam de token nesta configuração. O SICAR e o TerraBrasilis podem ficar indisponíveis temporariamente por decisão dos servidores de origem. SoilGrids REST também pode estar suspensa.</p></div>
-        <div class="integration-actions"><button id="generateCentralEnv" class="gps-primary" type="button">Gerar arquivo único para Render</button><button id="clearIntegrationForm" class="gps-secondary" type="button">Limpar campos</button></div>
-        <div id="integrationExportStatus" class="agro-result" role="status">Preencha somente os serviços que você já configurou. O arquivo será gerado localmente no navegador.</div>
-      </form>
-      <article class="gps-card integration-import-guide"><span class="eyebrow">ÚLTIMA ETAPA</span><h2>Importar no Render uma única vez</h2><ol><li>Baixe o arquivo gerado <code>central-agro.env</code>.</li><li>Abra o serviço PesaBoi no <a href="https://dashboard.render.com" target="_blank" rel="noopener">Render Dashboard</a>.</li><li>Entre em <b>Environment</b> e clique em <b>Add from .env</b>.</li><li>Selecione <code>central-agro.env</code> e salve com <b>Save, rebuild, and deploy</b> (ou a opção equivalente exibida).</li><li>Quando o deploy terminar, volte aqui e clique em <b>Atualizar status</b>.</li></ol><p class="gps-warning">O arquivo contém chaves em texto legível. Guarde-o em local privado, não o envie por e-mail/mensagens, não o coloque no GitHub e apague a cópia depois de importar. Não compartilhe o arquivo .env com ninguém.</p></article>
-    </section>
-
-    <section id="home" class="screen hidden">
-      <div class="home-heading">
-        <div><span class="eyebrow">PROPRIEDADE</span><h1 id="farmTitle">Minha Fazenda</h1><p id="hello">Organize os registros do seu rebanho.</p></div>
-      </div>
-
-      <div class="home-layout">
-        <button id="openCamera" class="home-tile camera-tile" type="button">
-          <span class="tile-icon camera-icon" aria-hidden="true">🐂</span>
-          <strong>CÂMERA</strong>
-          <small>Fotografar e cadastrar um bovino</small>
-          <span class="tile-arrow" aria-hidden="true">→</span>
-        </button>
-        <div class="home-side">
-          <button id="openDatabase" class="home-tile database-tile" type="button">
-            <span class="tile-icon database-icon" aria-hidden="true">▤</span>
-            <strong>BANCO DE DADOS</strong>
-            <small>Fichas dos bois e estimativas</small>
-            <span id="animalCount" class="count-badge">0 animais</span>
-            <span class="tile-arrow" aria-hidden="true">→</span>
-          </button>
-          <section class="home-tile last-tile" aria-labelledby="lastTitle">
-            <div class="last-top"><span class="eyebrow" id="lastTitle">ÚLTIMA PESAGEM</span><span class="scale-icon" aria-hidden="true">⚖</span></div>
-            <h2 id="lastName">Nenhum animal analisado</h2>
-            <div class="last-weight"><strong id="lastWeight">--</strong><span>kg</span></div>
-            <p id="lastDate">Faça a primeira análise pela câmera.</p>
-            <button id="viewLast" class="inline-link" type="button" disabled>Ver relatório <span>→</span></button>
-          </section>
-        </div>
-      </div>
-      <p class="home-note">O PesaBoi calcula com medidas corporais estimadas; compare os resultados com uma balança para validar a precisão.</p>
-
-      <section class="premium-card" aria-labelledby="premiumTitle">
-        <div class="premium-card-copy">
-          <span class="eyebrow">PESABOI PREMIUM</span>
-          <h2 id="premiumTitle">Uma experiência sem anúncios</h2>
-          <p>O plano Premium está sendo preparado. A assinatura só será liberada quando o pagamento e a confirmação segura do acesso estiverem conectados.</p>
-        </div>
-        <span class="premium-status" id="premiumStatus">EM CONFIGURAÇÃO</span>
-        <button id="premiumAction" class="premium-action" type="button" disabled>Premium em breve</button>
-      </section>
-
-      <aside id="homeAdPlacement" class="ad-placement hidden" aria-label="Publicidade">
-        <span class="ad-disclosure">ANÚNCIO</span>
-        <div id="homeAdSlot" class="ad-slot"></div>
-      </aside>
-    </section>
-
-    <section id="gps" class="screen hidden gps-screen">
-      <div class="gps-topline"><button id="gpsBackCentral" class="gps-back">← Central Agro</button><div><span class="eyebrow">AGRICULTURA DE PRECISÃO</span><h1>GPS Agrônomo</h1><p>Orientação e controle operacional sem inteligência artificial.</p></div><span id="gpsOnline" class="gps-status">Verificando conexão…</span></div>
-      <nav class="gps-tabs" aria-label="Módulos GPS Agrônomo">
-        <button data-gps-tab="overview" class="active">Início</button><button data-gps-tab="map">Mapa</button><button data-gps-tab="fields">Talhões</button><button data-gps-tab="guidance">Orientação</button><button data-gps-tab="machines">Máquinas</button><button data-gps-tab="operations">Operações</button><button data-gps-tab="planting">Plantio</button><button data-gps-tab="spraying">Pulverização</button><button data-gps-tab="reports">Relatórios</button><button data-gps-tab="settings">Configurações</button>
-      </nav>
-      <div id="gpsNotice" class="gps-notice hidden" role="status"></div>
-      <section id="gpsImageryConsentPanel" class="gps-consent-card" aria-labelledby="gpsImageryConsentTitle">
-        <div class="gps-consent-copy">
-          <span class="eyebrow">AVISO DE PRIVACIDADE E MAPAS</span>
-          <h2 id="gpsImageryConsentTitle">Uso da localização e da cartografia próxima</h2>
-          <p>Ao utilizar os recursos de GPS, você poderá autorizar o navegador a compartilhar sua localização com o PesaBoi para posicionar o mapa, gravar trajetórias e apoiar a demarcação dos talhões. O aplicativo também carrega os mapas disponíveis da região próxima para ajudar na conferência visual.</p>
-          <p class="gps-consent-detail">A localização só é solicitada quando você toca em Obter localização ou Iniciar gravação; o navegador apresenta sua própria permissão. O mapa integrado nesta versão é a cartografia OpenStreetMap. Imagens aéreas ou de satélite ainda dependem de uma fonte adicional e não estão ativadas. Você pode desenhar e salvar talhões manualmente mesmo sem liberar o GPS. Os dados salvos permanecem neste dispositivo e a demarcação deve ser conferida no campo.</p>
-        </div>
-        <label class="gps-consent-check"><input id="gpsImageryConsentCheck" type="checkbox"> Li e estou ciente do uso da localização e dos mapas da região quando eu acionar esses recursos (opcional).</label>
-        <div class="gps-actions">
-          <button id="gpsAcceptImagery" class="gps-primary" type="button">Registrar ciência (opcional)</button>
-          <button id="gpsRevokeImagery" class="gps-secondary" type="button">Apagar registro de ciência</button>
-          <small id="gpsImageryConsentStatus" role="status">Aviso informativo: confirmar é opcional e não é necessário para usar mapas, cálculos, demarcação manual ou solicitar o GPS.</small>
-        </div>
-      </section>
-      <section data-gps-panel="overview" class="gps-panel">
-        <div class="gps-metric-grid"><article><small>PRECISÃO GPS</small><strong id="gpsAccuracy">—</strong><span id="gpsMode">Aguardando posição</span></article><article><small>VELOCIDADE</small><strong id="gpsSpeed">—</strong><span>Velocidade informada pelo receptor</span></article><article><small>TALHÕES</small><strong id="reportFields">0</strong><span>Cadastrados neste dispositivo</span></article><article><small>ÁREA CADASTRADA</small><strong id="reportArea">0 ha</strong><span>Soma dos talhões</span></article></div>
-        <div class="gps-two-col"><article class="gps-card"><span class="eyebrow">LOCALIZAÇÃO</span><h2>Posição atual</h2><strong id="gpsCoords">Aguardando GPS</strong><div class="gps-actions"><button id="gpsLocate" class="gps-primary">Obter localização</button><button id="startTrack" class="gps-secondary">Iniciar gravação</button><button id="stopTrack" class="gps-secondary" disabled>Parar</button></div></article><article class="gps-card"><span class="eyebrow">TRABALHO REGISTRADO</span><h2>Trajetória desta sessão</h2><strong id="trackDistance">0 km</strong><p>Área teórica coberta: <b id="workedArea">0 ha*</b></p><small>*Estimativa por distância × largura útil; não substitui o mapa real de cobertura.</small></article></div>
-        <div class="gps-card"><h2>Precisão e compatibilidade</h2><div class="gps-levels"><div><b>GPS comum</b><span>Localização básica, precisão variável conforme céu e aparelho.</span></div><div><b>GNSS diferencial</b><span>Melhora a posição com correções compatíveis.</span></div><div><b>RTK</b><span>Precisão centimétrica possível com receptor, antena, correções e configuração adequados.</span></div></div></div>
-      </section>
-      <section data-gps-panel="map" class="gps-panel hidden"><div class="gps-section-head"><div><span class="eyebrow">MAPA DA PROPRIEDADE</span><h2>Mapa e trajetórias</h2><p>O mapa integrado usa cartografia OpenStreetMap. Imagens aéreas/satélite exigem uma fonte compatível adicional. Cálculos e dados locais continuam disponíveis sem internet.</p></div><button id="gpsLocateMap" class="gps-primary">Centralizar GPS</button></div><div id="agroMapHome"><div id="agroMap" class="agro-map" role="application" aria-label="Mapa agrícola"></div></div><div class="gps-map-legend"><span>● Posição GPS</span><span>━ Trajeto gravado</span><span>▱ Talhões cadastrados</span><span>┄ Linhas de orientação</span></div></section>
-      <section data-gps-panel="fields" class="gps-panel hidden"><div class="gps-section-head"><div><span class="eyebrow">PROPRIEDADES E ÁREAS</span><h2>Cadastro de talhões</h2><p>Ative o modo de desenho e marque três ou mais vértices no mapa.</p></div></div><div class="gps-card gps-form-row"><label>Nome do talhão<input id="fieldName" placeholder="Ex.: Talhão Norte"></label><label class="gps-check"><input type="checkbox" id="fieldDrawMode"> Desenhar no mapa ao clicar</label><div class="gps-actions"><button id="saveField" class="gps-primary">Salvar talhão</button><button id="clearFieldDraft" class="gps-secondary">Limpar pontos</button></div><small id="fieldDraftCount">0 pontos marcados</small></div><div id="agroMapFields" class="gps-map-host gps-map-small"></div><div id="fieldList" class="gps-list"></div></section>
-      <section data-gps-panel="guidance" class="gps-panel hidden"><div class="gps-section-head"><div><span class="eyebrow">ORIENTAÇÃO PARA TRATORES</span><h2>Linhas A/B e passadas paralelas</h2><p>Marque A e B pela posição GPS ou selecione cada ponto clicando no mapa. As paralelas usam largura útil = largura do implemento − sobreposição.</p></div></div><div class="gps-two-col"><article class="gps-card"><h3>Pontos de referência</h3><p>A: <strong id="pointAStatus">Não marcado</strong></p><button id="markA" class="gps-primary">Marcar ponto A na posição GPS</button><button id="markAMap" class="gps-secondary" type="button">Marcar A clicando no mapa</button><p>B: <strong id="pointBStatus">Não marcado</strong></p><button id="markB" class="gps-primary">Marcar ponto B na posição GPS</button><button id="markBMap" class="gps-secondary" type="button">Marcar B clicando no mapa</button><button id="clearAB" class="gps-secondary">Apagar linha A/B</button></article><article class="gps-card"><h3>Implemento e sobreposição</h3><label>Largura do implemento (m)<input id="implementWidth" type="number" min="0.1" step="0.1" value="12"></label><label>Sobreposição (m)<input id="overlap" type="number" min="0" step="0.05" value="0.3"></label><p>Espaçamento útil: <b id="gpsGuideSpacing">11,70 m</b></p><p>Passada calculada: <b id="gpsPass">—</b></p><p>Desvio lateral: <b id="gpsDeviation">—</b></p></article></div><div id="agroMapGuidance" class="gps-map-host gps-map-small"></div><p class="gps-warning">A orientação exibida é uma referência matemática baseada na posição GNSS disponível. Não é piloto automático nem substitui monitor agrícola certificado. A precisão depende do receptor e da correção.</p></section>
-      <section data-gps-panel="machines" class="gps-panel hidden"><div class="gps-card"><span class="eyebrow">FROTA AGRÍCOLA</span><h2>Cadastrar máquina e implemento</h2><div class="gps-form-grid"><label>Nome<input id="machineName" placeholder="Trator principal"></label><label>Tipo<select id="machineType"><option>Trator</option><option>Pulverizador</option><option>Plantadeira</option><option>Colheitadeira</option><option>Distribuidor de adubo</option><option>Outro</option></select></label><label>Largura de trabalho (m)<input id="machineWidth" type="number" min="0.1" step="0.1" value="12"></label></div><button id="saveMachine" class="gps-primary">Salvar máquina</button></div><div id="machineList" class="gps-list"></div></section>
-      <section data-gps-panel="operations" class="gps-panel hidden"><div class="gps-card"><span class="eyebrow">HISTÓRICO DE CAMPO</span><h2>Registrar operação agrícola</h2><div class="gps-form-grid"><label>Operação<select id="operationType"><option>Plantio</option><option>Pulverização</option><option>Adubação</option><option>Colheita</option><option>Preparo do solo</option><option>Outra</option></select></label><label>Talhão<input id="operationField" placeholder="Nome do talhão"></label><label>Área trabalhada (ha)<input id="operationArea" type="number" min="0.01" step="0.01" placeholder="Ex.: 12,5"></label></div><button id="saveOperation" class="gps-primary">Registrar operação</button><hr><h3>Cálculos de operação e adubação</h3><div class="gps-form-grid"><label>Largura de trabalho (m)<input id="capacityWidth" type="number" step="0.1" value="12"></label><label>Velocidade (km/h)<input id="capacitySpeed" type="number" step="0.1" value="8"></label><label>Dose de fertilizante (kg/ha)<input id="fertDose" type="number" step="0.1" value="250"></label><label>Área para adubação (ha)<input id="fertArea" type="number" step="0.01" value="10"></label><label>Desnível vertical (m)<input id="slopeHeight" type="number" step="0.01" value="2"></label><label>Distância horizontal (m)<input id="slopeDistance" type="number" step="0.01" value="20"></label></div><button id="calculateOperations" class="gps-secondary">Calcular capacidade, adubo e inclinação</button><div id="operationsCalcResult" class="gps-calc-result">Capacidade, quantidade de adubo e inclinação aparecerão aqui.</div></div><div id="operationList" class="gps-list"></div></section>
-      <section data-gps-panel="planting" class="gps-panel hidden"><div class="gps-card"><span class="eyebrow">PLANEJAMENTO DE SEMEADURA</span><h2>Calculadora de plantio</h2><div class="gps-form-grid"><label>População desejada (plantas/ha)<input id="plantPopulation" type="number" min="1" value="60000"></label><label>Germinação (%)<input id="germination" type="number" min="1" max="100" value="95"></label><label>Emergência (%)<input id="emergence" type="number" min="1" max="100" value="90"></label></div><button id="calculatePlanting" class="gps-primary">Calcular sementes por hectare</button><div id="plantingResult" class="gps-calc-result">Preencha os dados e calcule.</div><p class="gps-warning">Sementes/ha = população desejada ÷ (germinação × emergência). Os percentuais são convertidos em fração decimal.</p></div></section>
-      <section data-gps-panel="spraying" class="gps-panel hidden"><div class="gps-card"><span class="eyebrow">TECNOLOGIA DE APLICAÇÃO</span><h2>Calculadora de pulverização</h2><div class="gps-form-grid"><label>Vazão total (L/min)<input id="sprayFlow" type="number" min="0.01" step="0.1" value="20"></label><label>Velocidade (km/h)<input id="spraySpeed" type="number" min="0.1" step="0.1" value="8"></label><label>Largura efetiva (m)<input id="sprayWidth" type="number" min="0.1" step="0.1" value="12"></label></div><button id="calculateSpraying" class="gps-primary">Calcular taxa de aplicação</button><div id="sprayingResult" class="gps-calc-result">Preencha os dados e calcule.</div><p class="gps-warning">L/ha = 600 × vazão total (L/min) ÷ velocidade (km/h) ÷ largura efetiva (m). Confirme vazão e calibração dos bicos antes da aplicação.</p></div></section>
-      <section data-gps-panel="reports" class="gps-panel hidden"><div class="gps-metric-grid"><article><small>TALHÕES</small><strong id="reportFields2">0</strong></article><article><small>ÁREA TOTAL</small><strong id="reportArea2">0 ha</strong></article><article><small>OPERAÇÕES</small><strong id="reportOperations">0</strong></article><article><small>TRAJETO</small><strong id="reportTrack">0 km</strong></article></div><div class="gps-card"><h2>Backup e relatórios</h2><p>Exporte os dados locais em JSON para guardar ou transferir.</p><button id="exportGps" class="gps-primary">Exportar dados do GPS</button></div></section>
-      <section data-gps-panel="settings" class="gps-panel hidden"><div class="gps-card"><span class="eyebrow">GNSS / RTK</span><h2>Configurações de precisão</h2><div class="gps-levels"><div><b>GPS do dispositivo</b><span>Usa a geolocalização oferecida pelo navegador e aparelho.</span></div><div><b>Receptor GNSS externo</b><span>Compatibilidade depende de o receptor disponibilizar posição ao dispositivo por Bluetooth, USB ou integração suportada.</span></div><div><b>NTRIP / RBMC-IP IBGE</b><span>O RBMC-IP exige cadastro, receptor compatível, mountpoint e credenciais. Esta interface não afirma conexão automática: configure um cliente NTRIP compatível e verifique o fluxo de correções.</span></div></div><p class="gps-warning">Não digite senhas NTRIP neste formulário demonstrativo. Nenhum fluxo de correção está conectado nesta versão.</p></div><div class="gps-card"><h2>Funcionamento offline</h2><p>Localização, cálculos, talhões e registros salvos funcionam sem internet. O mapa base e correções NTRIP podem depender de conexão e de mapas previamente armazenados.</p><button id="exportGps2" class="gps-secondary" type="button">Exportar backup</button></div></section>
-    </section>
-
-
-    <section id="agroLab" class="screen hidden agro-lab-screen">
-      <div class="gps-topline"><button id="agroLabBack" class="gps-back" type="button">← Central Agro</button><div><span class="eyebrow">FERRAMENTAS AGRONÔMICAS</span><h1>Agro Análises</h1><p>Satélite, clima, solo, ambiente, pastagens e diagnóstico por foto.</p></div><span id="agroServicesStatus" class="gps-status">Verificando serviços…</span></div>
-      <nav class="agro-tool-tabs" aria-label="Ferramentas agronômicas">
-        <button data-agro-tab="satellite" class="active">Satélite / NDVI</button><button data-agro-tab="weather">Clima / Água</button><button data-agro-tab="soil">Solo / ZARC</button><button data-agro-tab="environment">Ambiental</button><button data-agro-tab="pasture">Pasto / Ração</button><button data-agro-tab="pests">Pragas por foto</button>
-      </nav>
-      <div id="agroLabNotice" class="gps-notice hidden" role="status"></div>
-      <section data-agro-panel="satellite" class="agro-panel">
-        <div class="agro-module-heading"><span class="eyebrow">SENSORIAMENTO REMOTO</span><h2>Imagens Sentinel-2 e saúde da vegetação</h2><p>Composição de refletância Sentinel-2 L2A, máscara de nuvens e cálculo de NDVI via Google Earth Engine.</p></div>
-        <div class="agro-panel-grid">
-          <article class="gps-card">
-            <h3>Área de análise</h3>
-            <div class="gps-form-grid"><label>Latitude<input id="satLat" type="number" step="0.000001" min="-90" max="90" placeholder="Latitude"></label><label>Longitude<input id="satLon" type="number" step="0.000001" min="-180" max="180" placeholder="Longitude"></label><label>Nuvens máximas (%)<input id="satCloud" type="number" min="0" max="100" value="70"></label><label>Data inicial<input id="satStart" type="date"></label><label>Data final<input id="satEnd" type="date"></label></div>
-            <div class="gps-actions"><button id="satUseGps" class="gps-secondary" type="button">Usar minha localização</button><button id="satGoToCoords" class="gps-secondary" type="button">Ir para coordenadas</button><button id="satLoadRgb" class="gps-primary" type="button">Carregar Sentinel-2 RGB</button><button id="satLoadNdvi" class="gps-primary" type="button">Ver camada NDVI</button><button id="satLoadMapbiomas" class="gps-secondary" type="button">MapBiomas 2025</button></div>
-            <p id="satelliteStatus" class="tool-status" role="status">Selecione uma região no mapa ou informe coordenadas. Para carregar tiles, o Google Earth Engine precisa estar configurado no servidor.</p>
-          </article>
-          <article class="gps-card"><h3>NDVI do talhão</h3><p>Desenhe um polígono na imagem e calcule estatísticas espectrais. NDVI indica vigor relativo e não identifica sozinho pragas ou doenças.</p><div class="gps-actions"><button id="satDrawPolygon" class="gps-secondary" type="button">Desenhar polígono</button><button id="satStopDraw" class="gps-secondary" type="button">Concluir desenho</button><button id="satAnalyzeNdvi" class="gps-primary" type="button">Calcular NDVI do polígono</button></div><div id="ndviResults" class="agro-result" aria-live="polite">Aguardando polígono.</div></article>
-        </div>
-        <div id="agroSatelliteMap" class="agro-map agro-analysis-map" role="application" aria-label="Mapa interativo Sentinel-2"></div>
-        <div class="gps-map-legend"><span>Base OpenStreetMap</span><span>Sentinel-2: resolução de 10 m nas bandas vermelha e infravermelha usadas no NDVI</span><span>Imagem depende de disponibilidade, nuvens, datas e GEE configurado</span></div>
-        <article class="gps-card agro-geotiff-card"><h3>NDVI local por GeoTIFF</h3><p>Você também pode abrir um GeoTIFF multibanda exportado do satélite. Escolha as bandas correspondentes a vermelho (B4) e infravermelho próximo (B8). O cálculo ocorre no navegador.</p><div class="gps-form-grid"><label>Arquivo GeoTIFF<input id="ndviTiffFile" type="file" accept=".tif,.tiff,image/tiff"></label><label>Banda vermelha (B4)<input id="ndviRedBand" type="number" min="1" value="4"></label><label>Banda NIR (B8)<input id="ndviNirBand" type="number" min="1" value="8"></label></div><button id="calculateTiffNdvi" class="gps-primary" type="button">Calcular NDVI do GeoTIFF</button><div id="tiffNdviResult" class="agro-result">Nenhum GeoTIFF carregado.</div></article>
-        <p class="gps-warning">Sentinel-2 não é imagem em tempo real. O intervalo de revisita nominal é de cerca de cinco dias; nuvens, geometria orbital e processamento podem atrasar a melhor cena disponível. O resultado é apoio de monitoramento, não laudo agronômico.</p>
-      </section>
-      <section data-agro-panel="weather" class="agro-panel hidden">
-        <div class="agro-module-heading"><span class="eyebrow">METEOROLOGIA AGRÍCOLA</span><h2>Previsão do tempo e balanço hídrico</h2><p>Precipitação, temperatura, vento, ET₀ e estimativa de água disponível no solo.</p></div>
-        <article class="gps-card"><div class="gps-form-grid"><label>Latitude<input id="weatherLat" type="number" step="0.000001" placeholder="Latitude"></label><label>Longitude<input id="weatherLon" type="number" step="0.000001" placeholder="Longitude"></label><label>Coeficiente da cultura (Kc)<input id="weatherKc" type="number" min="0.1" max="2.5" step="0.05" value="1"></label><label>Água armazenada inicialmente (mm)<input id="weatherStorage" type="number" min="0" max="1000" value="60"></label><label>Capacidade de armazenamento (mm)<input id="weatherCapacity" type="number" min="1" max="2000" value="120"></label></div><div class="gps-actions"><button id="weatherUseGps" class="gps-secondary" type="button">Usar minha localização</button><button id="loadWeather" class="gps-primary" type="button">Consultar previsão de 7 dias</button><button id="loadNasaPower" class="gps-secondary" type="button">Consultar histórico NASA POWER</button></div><div id="weatherSummary" class="agro-result" role="status">Informe as coordenadas da propriedade.</div><div id="waterBalanceTable" class="agro-table-wrap"></div><div id="nasaPowerResult" class="agro-result">Histórico climatológico ainda não consultado.</div>
-          <div class="agro-submodule"><h3>Previsão regional Embrapa ClimAPI</h3><p>Consulta o GFS da Embrapa para um ponto em latitude/longitude. Requer token e assinatura ClimAPI no AgroAPI.</p><div class="gps-form-grid"><label>Variável<select id="embrapaClimateVariable"><option value="tmpsfc">Temperatura próxima à superfície</option><option value="tmax2m">Temperatura máxima a 2 m</option><option value="tmin2m">Temperatura mínima a 2 m</option><option value="apcpsfc">Precipitação acumulada</option><option value="rh2m">Umidade relativa a 2 m</option><option value="gustsfc">Rajadas de vento</option><option value="soill0_10cm">Umidade do solo 0–10 cm</option><option value="soill10_40cm">Umidade do solo 10–40 cm</option></select></label><label>Execução GFS disponível<select id="embrapaClimateDate"><option value="">Liste as datas primeiro</option></select></label></div><div class="gps-actions"><button id="loadEmbrapaDates" class="gps-secondary" type="button">Listar datas disponíveis</button><button id="loadEmbrapaClimate" class="gps-primary" type="button">Consultar Embrapa ClimAPI</button><a class="gps-secondary agro-link-button" href="https://www.portal.agroapi.cnptia.embrapa.br/" target="_blank" rel="noopener">Configurar acesso AgroAPI</a></div><div id="embrapaClimateResult" class="agro-result" role="status">Aguardando configuração e consulta.</div></div></article>
-        <p class="gps-warning">Balanço simplificado: armazenamento anterior + chuva − ETc, com ETc = ET₀ × Kc e limites definidos pelo usuário. Não calcula escoamento, drenagem profunda, irrigação aplicada ou variação espacial do solo.</p>
-      </section>
-      <section data-agro-panel="soil" class="agro-panel hidden">
-        <div class="agro-module-heading"><span class="eyebrow">PEDOLOGIA E ZONEAMENTO</span><h2>Dados de solo e aptidão agrícola</h2><p>Consulta de propriedades do solo, integração Embrapa AgroAPI e registro de análise laboratorial.</p></div>
-        <article class="gps-card"><div class="gps-form-grid"><label>Latitude<input id="soilLat" type="number" step="0.000001" placeholder="Latitude"></label><label>Longitude<input id="soilLon" type="number" step="0.000001" placeholder="Longitude"></label></div><div class="gps-actions"><button id="soilUseGps" class="gps-secondary" type="button">Usar minha localização</button><button id="querySoil" class="gps-primary" type="button">Consultar SoilGrids</button><a class="gps-secondary agro-link-button" href="https://www.portal.agroapi.cnptia.embrapa.br/" target="_blank" rel="noopener">Abrir Embrapa AgroAPI</a><a class="gps-secondary agro-link-button" href="https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/risco-agropecuario/zoneamento-agricola-de-risco-climatico" target="_blank" rel="noopener">Consultar ZARC / MAPA</a></div><div id="soilResults" class="agro-result">A consulta de SoilGrids pode estar temporariamente indisponível. Dados laboratoriais continuam disponíveis para registro.</div></article>
-        <article class="gps-card"><h3>Zoneamento Agrícola de Risco Climático — Embrapa Agritec</h3><p>Consulte as janelas de plantio ZARC pelo município, cultura e risco de 20%, 30% ou 40%, usando a AgroAPI Agritec v2. Primeiro consulte as culturas disponíveis para o município e use o identificador retornado.</p><div class="gps-form-grid"><label>Código IBGE do município (7 dígitos)<input id="agritecIbge" type="text" inputmode="numeric" maxlength="7" pattern="[0-9]{7}" placeholder="Código IBGE"></label><label>ID da cultura (Agritec)<input id="agritecCultureId" type="number" min="1" step="1" placeholder="ID retornado pela lista"></label><label>Risco de insucesso<select id="agritecRisk"><option value="20">20%</option><option value="30">30%</option><option value="40">40%</option><option value="todos">Todos os riscos</option></select></label></div><div class="gps-actions"><button id="loadAgritecCultures" class="gps-secondary" type="button">Consultar culturas ZARC do município</button><button id="loadAgritecZarc" class="gps-primary" type="button">Consultar janela de plantio</button><a class="gps-secondary agro-link-button" href="https://www.portal.agroapi.cnptia.embrapa.br/api-docs/agritec/v2" target="_blank" rel="noopener">Documentação Agritec v2</a></div><div id="agritecResult" class="agro-result" role="status">Requer token AgroAPI com Agritec v2 habilitada no Render. O resultado dependerá dos dados publicados para o município e cultura informados.</div></article>
-        <article class="gps-card"><h3>Registrar análise de laboratório</h3><p>Insira valores do laudo de solo do talhão. O aplicativo não inventa recomendações de calagem ou adubação.</p><div class="gps-form-grid"><label>pH (água)<input id="labPh" type="number" min="0" max="14" step="0.1"></label><label>Matéria orgânica (g/dm³)<input id="labOm" type="number" min="0" step="0.1"></label><label>Argila (%)<input id="labClay" type="number" min="0" max="100" step="1"></label><label>Fósforo (mg/dm³)<input id="labP" type="number" min="0" step="0.1"></label><label>Potássio (mg/dm³)<input id="labK" type="number" min="0" step="0.1"></label><label>Data do laudo<input id="labDate" type="date"></label></div><button id="saveSoilLab" class="gps-primary" type="button">Salvar laudo neste dispositivo</button><div id="soilLabList" class="agro-result">Nenhum laudo registrado.</div></article>
-        <article class="gps-card"><h3>Classificação do perfil — Embrapa SmartSolos Expert</h3><p>Informe os horizontes e atributos descritos em campo/laboratório. A API classifica o perfil conforme os níveis do SiBCS; não determina o solo apenas pela coordenada.</p><label>Perfil de solo em JSON<textarea id="smartSoilProfile" rows="8" spellcheck="false" placeholder='{"items":[{"ID_PONTO":"talhao-01","DRENAGEM":4,"HORIZONTES":[{"SIMB_HORIZ":"A","LIMITE_SUP":0,"LIMITE_INF":20,"ARGILA":350,"AREIA_GROS":150,"AREIA_FINA":200,"SILTE":300,"PH_AGUA":5.5,"C_ORG":15}]}]}'></textarea></label><button id="classifySmartSoil" class="gps-primary" type="button">Classificar perfil na Embrapa</button><div id="smartSoilResult" class="agro-result" role="status">Requer token AgroAPI com SmartSolos Expert habilitado.</div></article>
-        <p class="gps-warning">O SoilGrids é uma estimativa em grade global, não substitui análise de solo. O ZARC da Agritec fornece janelas por município/cultura e risco; confira safra, grupo/ciclo, solo e portaria vigente antes de decidir o plantio.</p>
-      </section>
-      <section data-agro-panel="environment" class="agro-panel hidden">
-        <div class="agro-module-heading"><span class="eyebrow">REGULARIDADE E MONITORAMENTO</span><h2>Análise ambiental e territorial</h2><p>Camadas públicas para consulta visual: CAR/SICAR, cobertura MapBiomas, PRODES e DETER/INPE.</p></div>
-        <article class="gps-card"><div class="gps-actions"><button id="envLoadSicar" class="gps-secondary" type="button">Buscar camadas SICAR</button><button id="envLoadTerra" class="gps-secondary" type="button">Buscar camadas TerraBrasilis / INPE</button><button id="envLoadMapbiomas" class="gps-primary" type="button">Adicionar MapBiomas 2025 (GEE)</button><button id="envClearLayers" class="gps-secondary" type="button">Limpar camadas</button></div><div class="gps-form-grid"><label>Camada SICAR<select id="envSicarLayer"><option value="">Carregue o catálogo WMS</option></select><button id="envAddSicar" class="gps-secondary" type="button">Carregar camada SICAR</button></label><label>Camada TerraBrasilis<select id="envTerraLayer"><option value="">Carregue o catálogo WMS</option></select><button id="envAddTerra" class="gps-secondary" type="button">Carregar camada TerraBrasilis</button></label></div><div id="environmentStatus" class="tool-status">Camadas externas dependem da internet e da disponibilidade do serviço WMS/GEE.</div></article>
-        <div id="agroEnvironmentMap" class="agro-map agro-analysis-map" role="application" aria-label="Mapa de análise ambiental"></div>
-        <div class="gps-map-legend"><span>Camadas são indicativas e devem ser conferidas com os órgãos gestores e documentos oficiais.</span></div>
-        <div class="agro-source-links"><a href="https://www.car.gov.br/publico/imoveis/index" target="_blank" rel="noopener">Portal público SICAR</a><a href="https://brasil.mapbiomas.org/" target="_blank" rel="noopener">MapBiomas Brasil</a><a href="https://terrabrasilis.dpi.inpe.br/" target="_blank" rel="noopener">TerraBrasilis / INPE</a></div>
-        <p class="gps-warning">PRODES/DETER apontam ocorrências de supressão/degradação, mas não determinam a legalidade de cada intervenção. Uma camada no mapa não substitui CAR, licenciamento, matrícula, consulta ambiental oficial ou parecer técnico.</p>
-      </section>
-      <section data-agro-panel="pasture" class="agro-panel hidden">
-        <div class="agro-module-heading"><span class="eyebrow">PECUÁRIA DE PRECISÃO</span><h2>Lotação de pasto, ração e custo</h2><p>Dimensione oferta de matéria seca e custo de dieta com preços registrados e fonte identificada.</p></div>
-        <div class="agro-panel-grid">
-          <article class="gps-card"><h3>Capacidade de lotação</h3><div class="gps-form-grid"><label>Área de pasto (ha)<input id="pastureArea" type="number" min="0.01" step="0.01" value="10"></label><label>Produção de MS (kg/ha/período)<input id="pastureDm" type="number" min="1" step="10" value="3000"></label><label>Taxa de aproveitamento (%)<input id="pastureUse" type="number" min="1" max="100" value="40"></label><label>Peso médio por animal (kg)<input id="pastureWeight" type="number" min="1" value="450"></label><label>Consumo de MS (% do peso/dia)<input id="pastureIntake" type="number" min="0.1" max="5" step="0.1" value="2.5"></label><label>Dias de pastejo<input id="pastureDays" type="number" min="1" value="30"></label></div><button id="calculateStocking" class="gps-primary" type="button">Calcular capacidade</button><div id="stockingResult" class="agro-result">Preencha os dados de massa de forragem e período.</div></article>
-          <article class="gps-card"><h3>Custo de ração</h3><div class="gps-form-grid"><label>Milho (R$/kg)<input id="feedCornPrice" type="number" min="0" step="0.001" value="1.2"></label><label>Participação do milho (%)<input id="feedCornPct" type="number" min="0" max="100" value="60"></label><label>Farelo de soja (R$/kg)<input id="feedSoyPrice" type="number" min="0" step="0.001" value="2.2"></label><label>Participação do farelo (%)<input id="feedSoyPct" type="number" min="0" max="100" value="30"></label><label>Mineral/outros (R$/kg)<input id="feedOtherPrice" type="number" min="0" step="0.001" value="3"></label><label>Participação mineral/outros (%)<input id="feedOtherPct" type="number" min="0" max="100" value="10"></label><label>Ração por animal (kg/dia)<input id="feedKgDay" type="number" min="0.01" step="0.1" value="2"></label><label>Número de animais<input id="feedAnimals" type="number" min="1" value="50"></label><label>Dias de trato<input id="feedDays" type="number" min="1" value="30"></label></div><button id="calculateRation" class="gps-primary" type="button">Calcular custo da dieta</button><div id="rationResult" class="agro-result">Informe os preços de aquisição e a proporção da mistura.</div></article>
-        </div>
-        <article class="gps-card"><h3>Cotações de referência</h3><p>Registre a cotação consultada e a data para atualizar automaticamente o custo dos ingredientes. A fonte CEPEA/ESALQ publica indicadores de milho, soja, boi e bezerro. Nesta versão, registre manualmente o preço consultado e a data; não há cotação automática sem uma API licenciada/configurada.</p><div class="gps-form-grid"><label>Produto<select id="quoteCommodity"><option>Milho</option><option>Soja</option><option>Boi gordo</option><option>Bezerro</option></select></label><label>Valor da cotação (R$)<input id="quoteValue" type="number" min="0" step="0.01"></label><label>Unidade<input id="quoteUnit" value="R$/saca 60 kg"></label><label>Data da cotação<input id="quoteDate" type="date"></label></div><button id="saveQuote" class="gps-secondary" type="button">Salvar cotação</button><a class="gps-secondary agro-link-button" href="https://cepea.org.br/indicadores/" target="_blank" rel="noopener">Consultar CEPEA/ESALQ</a><div id="quoteList" class="agro-result">Nenhuma cotação registrada.</div></article>
-        <p class="gps-warning">A lotação é uma estimativa baseada na matéria seca fornecida. Ajuste oferta, perdas, resíduo, categoria animal, clima e período de descanso com assistência técnica. Uma formulação de ração completa exige exigências nutricionais, composição bromatológica e balanceamento profissional.</p>
-      </section>
-      <section data-agro-panel="pests" class="agro-panel hidden">
-        <div class="agro-module-heading"><span class="eyebrow">VISÃO COMPUTACIONAL AGRÍCOLA</span><h2>Triagem de pragas e doenças por fotografia</h2><p>Fotografe a praga ou o dano na planta. O módulo usa o detector de insetos IP102 pela Hugging Face quando um endpoint dedicado está configurado; TensorFlow.js pode executar um modelo local compatível.</p></div>
-        <article class="gps-card"><div class="gps-form-grid"><label>Cultura<select id="pestCrop"><option value="">Selecione a cultura</option><option>Milho</option><option>Soja</option><option>Arroz</option><option>Trigo</option><option>Feijão</option><option>Algodão</option><option>Tomate</option><option>Batata</option><option>Maçã</option><option>Uva</option><option>Pimentão</option><option>Citros</option><option>Cana-de-açúcar</option><option>Outra</option></select></label><label>Foto da folha<input id="pestPhoto" type="file" accept="image/*" capture="environment"></label><label>Modo de análise<select id="pestMethod"><option value="huggingface">Hugging Face — detector IP102 (endpoint)</option><option value="tensorflow">TensorFlow.js local — modelo de pragas compatível</option></select></label></div><div id="pestPreviewWrap" class="pest-preview-wrap hidden"><img id="pestPreview" alt="Foto selecionada para análise"></div><div class="gps-actions"><button id="runPestDiagnosis" class="gps-primary" type="button">Analisar fotografia</button></div><div id="pestStatus" class="agro-result" role="status">Configure HF_TOKEN e HF_PEST_ENDPOINT_URL no Render. O modelo IP102 não está implantado em um Inference Provider compartilhado. TensorFlow.js local requer modelo TF.js de pragas em /models/pest-detection/.</div><div id="pestResult" class="agro-result">Aguardando imagem.</div></article>
-        <p class="gps-warning">O detector IP102 reconhece apenas as classes presentes no conjunto de treinamento; fotos brasileiras e condições reais podem diferir. Respostas de confiança baixa ou formato desconhecido são inconclusivas. Confirme com agrônomo e não aplique defensivo apenas com base no classificador.</p>
-      </section>
-    </section>
-
-    <section id="database" class="screen hidden">
-      <div class="page-heading"><button class="back-button" data-go="home" aria-label="Voltar">←</button><div><h1>Banco de dados</h1><p id="databaseCount">0 animais cadastrados</p></div></div>
-      <div class="database-toolbar">
-        <input id="search" type="search" placeholder="Pesquisar por nome, número, brinco ou raça..." autocomplete="off">
-        <div class="backup-actions">
-          <button id="exportBackup" class="secondary-button" type="button">Exportar backup</button>
-          <label class="secondary-button import-button">Importar backup<input id="importBackup" type="file" accept="application/json,.json"></label>
-        </div>
-      </div>
-      <div id="animalList" class="animal-list"></div>
-      <div id="empty" class="empty-state"><span>🐄</span><h2>Nenhum animal registrado</h2><p>Abra a câmera para fotografar o primeiro bovino.</p><button class="primary-button" data-go="scanner" type="button">Abrir câmera →</button></div>
-
-      <section class="panel morphometry-panel" aria-labelledby="morphometryTitle">
-        <div class="panel-heading"><div><span class="eyebrow">MOTOR MATEMÁTICO</span><h2 id="morphometryTitle">Análise visual automática</h2><p>O aplicativo localiza o bovino na foto e faz uma pré-estimativa matemática usando a forma visível e o perfil informado.</p></div><span class="soft-icon">⌁</span></div>
-        <div class="morphometry-steps">
-          <article><b>01 · DETECÇÃO</b><span>Localização automática do bovino na fotografia.</span></article>
-          <article><b>02 · GEOMETRIA</b><span>Proporções visíveis convertidas em dimensões morfométricas aproximadas.</span></article>
-          <article><b>03 · CÁLCULO</b><span>Modelo elíptico e fórmula de Crevat, com coeficiente por raça.</span></article>
-          <article><b>04 · RESULTADO</b><span>Estimativa acompanhada de uma faixa ampla de incerteza.</span></article>
-        </div>
-        <p class="tool-status">A análise é automática e experimental. O detector apenas localiza o bovino; as dimensões físicas são aproximadas a partir de médias de raça/porte. Compare sempre com uma balança antes de usar o resultado.</p>
-      </section>
-    </section>
-
-    <section id="scanner" class="screen hidden camera-screen">
-      <div class="page-heading camera-heading"><button class="back-button" id="closeCamera" type="button" aria-label="Fechar câmera">×</button><div><span class="eyebrow">CAPTURA DE IMAGEM</span><h1>Câmera do PesaBoi</h1><p>Enquadre o bovino de corpo inteiro, de preferência de lado.</p></div><span class="live-pill"><i></i> AO VIVO</span></div>
-      <div class="camera-view">
-        <video id="video" autoplay playsinline muted></video>
-        <img id="preview" class="hidden" alt="Prévia da foto">
-        <div class="camera-overlay"><div class="scan-frame"><span class="scan-corner tl"></span><span class="scan-corner tr"></span><span class="scan-corner bl"></span><span class="scan-corner br"></span><div class="scan-line"></div></div><p id="scanMessage">Enquadre o animal inteiro, sem cortar patas ou cabeça.</p></div>
-        <div id="cameraPlaceholder" class="camera-placeholder"><span>📷</span><strong>Câmera pronta</strong><small>Permita o acesso à câmera ou escolha uma foto.</small></div>
-      </div>
-      <section id="cameraPermissionPanel" class="camera-permission-panel hidden" role="region" aria-labelledby="cameraPermissionTitle">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🐂</div>
         <div>
-          <strong id="cameraPermissionTitle">Permitir acesso à câmera</strong>
-          <p id="cameraPermissionText">Para fotografar o bovino, o PesaBoi precisa da sua autorização. Ao continuar, o navegador exibirá a solicitação de acesso à câmera.</p>
-          <small id="cameraPermissionHelp">A câmera só será ativada depois da sua autorização. Você também pode escolher uma foto do dispositivo.</small>
-        </div>
-        <div class="camera-permission-actions">
-          <button id="allowCamera" class="primary-button" type="button">Tentar câmera ao vivo</button>
-          <button id="captureFromDevice" class="secondary-button" type="button">Abrir câmera do aparelho</button>
-          <button id="choosePhotoFallback" class="secondary-button" type="button">Escolher foto salva</button>
-        </div>
-      </section>
-      <div class="camera-toolbar">
-        <p id="cameraStatus" role="status">Preparando a câmera...</p>
-        <div class="camera-actions camera-tools">
-          <button id="nightMode" class="secondary-button" type="button" aria-pressed="false">☾ Modo noturno</button>
-          <button id="torchToggle" class="secondary-button" type="button" aria-pressed="false">☼ Luz da câmera</button>
-        </div>
-        <p id="nightStatus" class="tool-status" role="status">Modo noturno digital desligado. A luz auxiliar depende do suporte do aparelho.</p>
-        <label class="camera-device-label" for="cameraDevice">Câmera conectada</label><select id="cameraDevice" class="camera-device-select"><option value="">Câmera padrão</option></select>
-        <div class="camera-actions">
-          <label class="secondary-button upload-button">Abrir câmera / escolher foto<input id="photo" type="file" accept="image/*" capture="environment"></label>
-          <button id="capture" class="primary-button" type="button">Capturar e continuar <span>→</span></button>
+          <div class="brand-name">PesaBoi</div>
+          <div class="brand-subtitle">Gestão inteligente do rebanho</div>
         </div>
       </div>
-    </section>
 
-    <section id="measurement" class="screen hidden measurement-screen">
-      <div class="measurement-backdrop" aria-hidden="true"></div>
-      <div class="measurement-content">
-        <button class="measurement-back" data-go="scanner" type="button" aria-label="Voltar à câmera">← Voltar à câmera</button>
-        <div class="photo-result" id="photoResult"><span>🐄</span><small>Foto do animal</small></div>
-        <div id="visionResult" class="vision-result" role="status" aria-live="polite">Fotografia preservada integralmente. A análise visual automática será executada ao continuar.</div>
-        <form id="measurementForm" class="panel measurement-form">
-          <div class="measurement-title"><span class="eyebrow">PESABOI · NOVA PESAGEM</span><h1>DADOS DO BOI</h1><p>Identificação do animal e análise automática da fotografia</p></div>
-          <section class="measure-section">
-            <h2>Identificação</h2>
-            <label for="animalName">NOME <small>(opcional)</small></label>
-            <input id="animalName" autocomplete="off" maxlength="70" placeholder="Nome do boi">
-            <label for="animalTag">BRINCO <small>(opcional)</small></label>
-            <input id="animalTag" autocomplete="off" maxlength="40" placeholder="Número do brinco">
-            <div class="selection-grid">
-              <div><label for="breed">RAÇA <em>*</em></label>
-                <select id="breed" required>
-                  <option value="">Seleção</option>
-                  <option>Angus</option><option>Nelore</option><option>Brangus</option><option>Hereford</option>
-                  <option>Brahman</option><option>Senepol</option><option>Guzerá</option><option>Gir</option>
-                  <option>Girolando</option><option>Holandês</option><option>Jersey</option><option>Tabapuã</option>
-                  <option>Simental</option><option>Charolês</option><option>Canchim</option><option>Outra / mestiço</option>
-                </select>
-              </div>
-              <div><label for="sizeClass">PORTE <em>*</em></label>
-                <select id="sizeClass" required><option value="">Seleção</option><option value="Pequeno">Pequeno</option><option value="Médio">Médio</option><option value="Grande">Grande</option></select>
+      <div class="nav-caption">Painel principal</div>
+      <nav class="nav-list">
+        <button class="nav-button active" data-view="inicio">
+          <span class="nav-icon">⌂</span> Início
+        </button>
+        <button class="nav-button" data-view="pesar">
+          <span class="nav-icon">📷</span> Pesar
+        </button>
+        <button class="nav-button" data-view="rebanho">
+          <span class="nav-icon">🐄</span> Rebanho
+        </button>
+        <button class="nav-button" data-view="historico">
+          <span class="nav-icon">▤</span> Histórico
+        </button>
+        <button class="nav-button" data-view="manejo">
+          <span class="nav-icon">🌿</span> Manejo e cuidados
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <strong>PesaBoi</strong>
+        Seus registros ficam salvos neste dispositivo.
+        <br>Versão demonstrativa.
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="mobile-brand">
+        <div class="brand-mark">🐂</div>
+        <div>
+          <strong>PesaBoi</strong>
+          <span>Gestão inteligente do rebanho</span>
+        </div>
+      </div>
+
+      <header class="topbar">
+        <div>
+          <h1 class="page-heading" id="pageTitle">Bem-vindo ao PesaBoi</h1>
+          <p class="page-description" id="pageDescription">
+            Vamos cuidar do seu rebanho?
+          </p>
+        </div>
+        <div class="topbar-actions">
+          <div class="date-chip" id="todayLabel"></div>
+          <button class="icon-button" id="voiceButton" title="Ouvir instruções" aria-label="Ouvir instruções">🔊</button>
+        </div>
+      </header>
+
+      <!-- INÍCIO -->
+      <section class="view active" id="view-inicio">
+        <div class="hero">
+          <div class="hero-content">
+            <p class="eyebrow">Tecnologia para o campo</p>
+            <h2>Vamos cuidar do seu rebanho?</h2>
+            <p>
+              Fotografe o animal, acompanhe a tentativa de pesagem e
+              organize os dados do seu rebanho em um só lugar.
+            </p>
+            <button class="primary-button" data-go="pesar">
+              INICIAR PESAGEM <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <h3>Resumo da propriedade</h3>
+            <p>Informações calculadas a partir dos seus registros.</p>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-top">
+              Animais cadastrados
+              <span class="metric-icon">🐄</span>
+            </div>
+            <div class="metric-value" id="metricAnimals">0</div>
+            <div class="metric-note">No seu rebanho</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-top">
+              Pesagens registradas
+              <span class="metric-icon">⚖️</span>
+            </div>
+            <div class="metric-value" id="metricWeighings">0</div>
+            <div class="metric-note">Com peso calculado</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-top">
+              Peso médio
+              <span class="metric-icon">📊</span>
+            </div>
+            <div class="metric-value" id="metricAverage">—</div>
+            <div class="metric-note">Dos pesos disponíveis</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-top">
+              Cuidados pendentes
+              <span class="metric-icon">📅</span>
+            </div>
+            <div class="metric-value" id="metricReminders">0</div>
+            <div class="metric-note">Lembretes em aberto</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>Atividade recente</h3>
+              <span>Seus registros</span>
+            </div>
+            <div id="recentActivity"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">
+              <h3>Sobre a pesagem por foto</h3>
+              <span>Informação</span>
+            </div>
+            <div class="notice">
+              <span class="notice-icon">ℹ️</span>
+              <div>
+                <strong>Modelo de peso ainda não conectado</strong>
+                O aplicativo recebe e organiza as fotografias, mas precisa
+                de um modelo de inteligência artificial treinado e validado
+                com pesos reais para calcular o peso do boi.
               </div>
             </div>
-          </section>
-
-          <section class="measure-section automatic-analysis-section">
-            <h2>1. Análise automática da fotografia</h2>
-            <p class="measure-help">Não é necessário marcar pontos, informar régua ou medir o tórax. O PesaBoi tentará localizar o bovino sozinho. Fotografe de lado, com o animal inteiro, em boa iluminação.</p>
-            <div class="measurement-canvas-wrap"><canvas id="measureCanvas" width="1200" height="1200" aria-label="Fotografia com detecção automática do bovino"></canvas></div>
-            <div id="autoAnalysisState" class="auto-analysis-state" role="status" aria-live="polite">Aguardando a fotografia para iniciar a análise automática.</div>
-            <div id="autoAnalysisMetrics" class="auto-analysis-metrics hidden"></div>
-          </section>
-
-          <section id="calculationResult" class="calculation-result hidden" aria-live="polite">
-            <span class="eyebrow">RESULTADO MATEMÁTICO</span>
-            <div class="calculation-weight"><strong id="calculatedWeight">--</strong><span>kg estimados</span></div>
-            <div id="calculationDetails" class="calculation-details"></div>
-            <p id="calculationWarning" class="measure-help">Pré-estimativa visual experimental, com ampla incerteza. Não é pesagem de balança e não deve ser usada para venda, medicamentos ou decisões veterinárias.</p>
-          </section>
-
-          <button id="saveAnimalForm" class="primary-button weigh-button full-width" type="submit"><span aria-hidden="true">⚖</span> CALCULAR PESO E SALVAR <span>→</span></button>
-          <button id="saveAndReturnDatabase" class="secondary-button full-width save-return-button" type="submit" data-return-to-database="true">SALVAR E VOLTAR AO BANCO DE DADOS</button>
-          <p id="saveStatus" class="tool-status" role="status">Selecione raça e porte. A análise da foto e os cálculos serão executados automaticamente.</p>
-        </form>
-      </div>
-    </section>
-
-    <section id="detail" class="screen hidden">
-      <div class="page-heading"><button class="back-button" data-go="database" type="button" aria-label="Voltar">←</button><div><span class="eyebrow">RELATÓRIO DO ANIMAL</span><h1 id="detailName">Animal</h1><p id="detailSubtitle">Ficha individual</p></div></div>
-      <div class="report-layout">
-        <section class="panel report-photo-panel">
-          <div class="report-photo-wrap"><img id="detailPhoto" alt="Foto atual do bovino" class="hidden"><div id="detailPhotoEmpty" class="photo-empty">🐄<span>Sem foto cadastrada</span></div></div>
-          <div class="photo-report-actions">
-            <label class="secondary-button photo-change-button">Atualizar foto<input id="replacePhoto" type="file" accept="image/*" capture="environment"></label>
-            <button id="goImportFromReport" class="primary-button" type="button">Nova análise pela câmera</button>
           </div>
-          <p id="photoStatusNote" class="tool-status">A foto fica guardada na ficha. A estimativa visual automática é experimental e precisa ser comparada com uma balança.</p>
-        </section>
-        <section class="panel report-weight-panel">
-          <span class="eyebrow">ÚLTIMO PESO REGISTRADO</span>
-          <div class="report-weight"><strong id="detailWeight">--</strong><span>kg</span></div>
-          <p id="detailRange" class="weight-range">Ainda sem estimativa.</p>
-          <div class="confidence-row"><span>Origem do peso</span><strong id="detailConfidence">Aguardando pesagem</strong></div>
-          <div id="detailInfo" class="detail-info"></div>
-        </section>
-        <section class="panel health-panel">
-          <div class="panel-heading"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2>Saúde do animal</h2></div><span id="healthBadge" class="health-badge health-unknown">Não informado</span></div>
-          <div id="healthAlerts" class="health-alerts">Nenhum alerta visual registrado.</div>
-          <p id="healthNotesView" class="health-notes-view"></p>
-        </section>
-        <section class="panel vaccine-panel">
-          <div class="panel-heading"><div><span class="eyebrow">CONTROLE SANITÁRIO</span><h2>Vacinas</h2></div><span class="soft-icon">✚</span></div>
-          <div id="vaccineReportList" class="vaccine-report-list"></div>
-          <button id="editFromReport" class="secondary-button" type="button">Atualizar saúde e vacinas</button>
-        </section>
-        <section class="panel history-panel">
-          <div class="panel-heading"><div><span class="eyebrow">EVOLUÇÃO DO REBANHO</span><h2>Histórico de peso</h2></div><span class="soft-icon">↗</span></div>
-          <div id="weightChart" class="weight-chart"></div><div id="historyList" class="history-list"></div>
-        </section>
-        <section class="panel validation-panel">
-          <div class="panel-heading"><div><span class="eyebrow">CONTROLE DE PRECISÃO</span><h2>Comparação com balança</h2></div><span class="soft-icon">±</span></div>
-          <div id="validationMetrics" class="validation-metrics">Registre o peso real de balança no relatório para começar a comparar.</div>
-          <p class="form-help">MAE, MAPE e viés são calculados com as comparações registradas. Para avaliar a precisão de verdade, mantenha animais separados que não foram usados na calibração.</p>
-        </section>
-      </div>
-      <div class="report-footer-actions">
-        <button id="returnToDatabaseFromReport" class="secondary-button" type="button">← Voltar ao Banco de Dados</button>
-        <button id="deleteAnimal" class="danger-button" type="button">Excluir animal</button>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <section id="update" class="screen hidden">
-      <div class="page-heading"><button class="back-button" data-go="detail" type="button" aria-label="Voltar">←</button><div><span class="eyebrow">RELATÓRIO DO ANIMAL</span><h1>Atualizar ficha</h1><p id="updateSubtitle">Edite as informações do bovino.</p></div></div>
-      <form id="updateForm" class="panel update-form">
-        <div class="form-grid"><div><label for="editName">Nome</label><input id="editName" maxlength="70"></div><div><label for="editTag">Brinco <small>(opcional)</small></label><input id="editTag" maxlength="40"></div></div>
-        <div class="form-grid"><div><label for="editBreed">Raça</label><select id="editBreed"><option>Angus</option><option>Nelore</option><option>Brangus</option><option>Hereford</option><option>Brahman</option><option>Senepol</option><option>Guzerá</option><option>Gir</option><option>Girolando</option><option>Holandês</option><option>Jersey</option><option>Tabapuã</option><option>Simental</option><option>Charolês</option><option>Canchim</option><option>Outra / mestiço</option></select></div><div><label for="editSize">Porte</label><select id="editSize"><option value="">Não informado</option><option value="Pequeno">Pequeno</option><option value="Médio">Médio</option><option value="Grande">Grande</option></select></div></div>
-        <div class="sick-toggle-row"><div><strong>Animal doente?</strong><small>Marque quando houver suspeita ou diagnóstico informado pelo responsável/veterinário.</small></div><label class="switch"><input id="editSick" type="checkbox"><span class="switch-slider"></span></label></div>
-        <label for="editHealthNotes">Doença ou sinais observados <small>(opcional)</small></label><textarea id="editHealthNotes" rows="3" placeholder="Descreva o que foi observado ou informado pelo veterinário..."></textarea>
-        <label for="editFeed">Alimentação <small>(opcional)</small></label><textarea id="editFeed" rows="2" placeholder="Informações da alimentação..."></textarea>
-        <label for="editNotes">Outras observações <small>(opcional)</small></label><textarea id="editNotes" rows="2" placeholder="Observações sobre o animal..."></textarea>
+      <!-- PESAR -->
+      <section class="view" id="view-pesar">
+        <div class="weigh-intro">
+          <div class="step-label"><span class="step-dot"></span> Etapa 1 — Fotografia e pesagem</div>
+          <h2>Vamos pesar seu boi?</h2>
+          <p>
+            Primeiro, fotografe o animal. Depois da tentativa de análise,
+            você poderá fazer o cadastro. Não precisa medir o peito nem o
+            comprimento do boi.
+          </p>
+        </div>
 
-        <h2 class="subsection-title">Vacinas aplicadas ou programadas</h2>
-        <p class="form-help">Registre o nome da vacina e a data. O protocolo correto deve ser definido com o médico-veterinário da propriedade.</p>
-        <div class="vaccine-entry-grid"><div><label for="vaccineName">Vacina</label><input id="vaccineName" placeholder="Nome da vacina"></div><div><label for="vaccineDate">Data</label><input id="vaccineDate" type="date"></div><div><label for="vaccineStatus">Situação</label><select id="vaccineStatus"><option value="Aplicada">Aplicada</option><option value="Programada">Programada</option></select></div></div>
-        <button id="addVaccine" class="secondary-button" type="button">Adicionar vacina</button>
-        <div id="vaccineEditorList" class="vaccine-editor-list"></div>
+        <div class="weigh-layout">
+          <div class="camera-card">
+            <div class="camera-stage" id="cameraStage">
+              <div class="camera-placeholder" id="cameraPlaceholder">
+                <span class="camera-emoji">🐂</span>
+                <strong>Prepare a fotografia do animal</strong>
+                <p>
+                  Procure um local iluminado e deixe o boi inteiro dentro
+                  da imagem, incluindo cabeça, corpo, patas e cauda.
+                </p>
+              </div>
 
-        <h2 class="subsection-title">Peso confirmado em balança <small>(opcional)</small></h2>
-        <p class="form-help">Use somente quando tiver uma pesagem real. Esse registro ficará identificado como peso de balança, separado da estimativa por foto.</p>
-        <div class="form-grid"><div><label for="newWeight">Peso em kg</label><input id="newWeight" type="number" min="1" max="2000" step="0.1" placeholder="Ex.: 425"></div><div><label for="newWeighingNote">Observação</label><input id="newWeighingNote" placeholder="Ex.: pesagem na balança da fazenda"></div></div>
-        <label class="calibration-check"><input id="useForCalibration" type="checkbox" checked> Comparar com a última estimativa e usar no ajuste matemático desta raça/porte.</label>
-        <p class="form-help">São necessárias pelo menos cinco comparações válidas para calcular um coeficiente empírico. Reserve animais/medições separados para conferir a validação.</p>
-        <button class="primary-button full-width" type="submit">Salvar alterações</button>
-      </form>
-    </section>
-  </main>
-  <footer class="footer">PesaBoi <span>•</span> Controle inteligente do rebanho <span>•</span> Versão 3.19 <span>•</span> <a href="privacidade.html" target="_blank" rel="noopener">Privacidade</a> <span>•</span> <button id="adPreferences" class="footer-preferences" type="button">Preferências de anúncios</button></footer>
-</div>
-<section id="adsConsentPanel" class="ads-consent hidden" role="dialog" aria-modal="false" aria-labelledby="adsConsentTitle">
-  <div class="ads-consent-copy">
-    <strong id="adsConsentTitle">Preferências de publicidade</strong>
-    <p>Com sua autorização, o PesaBoi poderá carregar anúncios de terceiros, que podem usar cookies para exibir e medir publicidade. Recusar não limita o uso do aplicativo. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+              <video id="cameraVideo" class="hidden" autoplay playsinline muted></video>
+
+              <img id="photoPreview" class="hidden" alt="Fotografia do animal">
+
+              <div class="frame-guide hidden" id="frameGuide" aria-hidden="true">
+                <span class="frame-corner tl"></span>
+                <span class="frame-corner tr"></span>
+                <span class="frame-corner bl"></span>
+                <span class="frame-corner br"></span>
+              </div>
+            </div>
+
+            <div class="camera-toolbar">
+              <button class="secondary-button" id="startCameraButton">
+                📷 Abrir câmera
+              </button>
+
+              <button class="primary-button hidden" id="captureButton">
+                ● Tirar foto
+              </button>
+
+              <label class="soft-button" for="photoFileInput">
+                🖼️ Escolher foto
+              </label>
+              <input
+                id="photoFileInput"
+                class="hidden"
+                type="file"
+                accept="image/*"
+                capture="environment"
+              >
+
+              <button class="soft-button hidden" id="retakeButton">
+                ↻ Tirar outra
+              </button>
+            </div>
+
+            <div class="photo-ready" id="photoReady">
+              <strong>✓ Fotografia recebida.</strong>
+              <div>Confira se o animal aparece inteiro antes de continuar.</div>
+            </div>
+
+            <div class="button-row" style="margin-top:14px">
+              <button class="primary-button button-full hidden" id="analyzeButton">
+                Conferir fotografia e continuar →
+              </button>
+            </div>
+
+            <div class="analysis-loading" id="analysisLoading">
+              <span class="spinner"></span>
+              <span>Conferindo o arquivo da fotografia...</span>
+            </div>
+
+            <div class="analysis-box" id="analysisBox">
+              <div class="step-label"><span class="step-dot"></span> Etapa 2 — Resultado da tentativa</div>
+
+              <div class="analysis-result" id="analysisResult">
+                <div class="weight-unavailable">
+                  <span class="big-icon">⚖️</span>
+                  <div>
+                    <h3>Peso ainda não calculado</h3>
+                    <p>
+                      A fotografia foi recebida, mas o modelo de inteligência
+                      artificial necessário para estimar o peso ainda não
+                      está conectado. Por isso, não vamos mostrar um número
+                      inventado.
+                    </p>
+                  </div>
+                </div>
+
+                <p class="subtle-text" style="margin:14px 0">
+                  Você pode continuar e cadastrar o animal. A fotografia
+                  ficará associada ao registro para uma futura análise com
+                  um modelo de pesagem validado.
+                </p>
+
+                <button class="primary-button button-full" id="openRegistrationButton">
+                  Continuar para o cadastro do animal →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="tips-card">
+            <h3>Como tirar uma boa foto</h3>
+
+            <div class="tip-item">
+              <span class="tip-number">1</span>
+              <div>
+                <strong>Mostre o animal inteiro</strong>
+                <p>Não corte a cabeça, a cauda ou as patas na fotografia.</p>
+              </div>
+            </div>
+
+            <div class="tip-item">
+              <span class="tip-number">2</span>
+              <div>
+                <strong>Fotografe de lado</strong>
+                <p>Procure deixar o corpo do boi visível de perfil.</p>
+              </div>
+            </div>
+
+            <div class="tip-item">
+              <span class="tip-number">3</span>
+              <div>
+                <strong>Escolha um local iluminado</strong>
+                <p>Evite fotos escuras, tremidas ou com muita sombra.</p>
+              </div>
+            </div>
+
+            <div class="tip-item">
+              <span class="tip-number">4</span>
+              <div>
+                <strong>Deixe o boi em pé</strong>
+                <p>Quando possível, fotografe o animal parado em terreno plano.</p>
+              </div>
+            </div>
+
+            <div class="notice" style="margin-top:15px">
+              <span class="notice-icon">💡</span>
+              <div>
+                <strong>Você não precisa medir o boi</strong>
+                O PesaBoi não solicita medidas manuais do corpo nesta etapa.
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- CADASTRO: SÓ APARECE DEPOIS DA TENTATIVA DE PESAGEM -->
+        <div class="registration-box" id="registrationBox">
+          <div class="step-label"><span class="step-dot"></span> Etapa 3 — Cadastro depois da pesagem</div>
+          <h3>Agora vamos cadastrar o animal</h3>
+          <p>
+            A pesagem por fotografia já foi iniciada. Preencha os dados que
+            souber. Raça e porte são opcionais. Não é necessário informar
+            medidas do corpo.
+          </p>
+
+          <form id="animalForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="animalName">Nome do animal</label>
+                <input id="animalName" name="animalName" maxlength="50" placeholder="Ex.: Estrela">
+              </div>
+
+              <div class="field">
+                <label for="animalTag">Número ou brinco de identificação</label>
+                <input id="animalTag" name="animalTag" maxlength="35" placeholder="Ex.: 025">
+              </div>
+
+              <div class="field">
+                <label for="animalBreed">Raça (opcional)</label>
+                <select id="animalBreed" name="animalBreed">
+                  <option value="">Não sei informar</option>
+                  <option>Nelore</option>
+                  <option>Angus</option>
+                  <option>Hereford</option>
+                  <option>Gir</option>
+                  <option>Girolando</option>
+                  <option>Holandês</option>
+                  <option>Jersey</option>
+                  <option>Brahman</option>
+                  <option>Guzerá</option>
+                  <option>Tabapuã</option>
+                  <option>Senepol</option>
+                  <option>Cruzamento</option>
+                  <option>Outra</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="animalSize">Porte (opcional)</label>
+                <select id="animalSize" name="animalSize">
+                  <option value="">Não sei informar</option>
+                  <option>Pequeno</option>
+                  <option>Médio</option>
+                  <option>Grande</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="animalSex">Sexo (opcional)</label>
+                <select id="animalSex" name="animalSex">
+                  <option value="">Não informado</option>
+                  <option value="Macho">Macho</option>
+                  <option value="Fêmea">Fêmea</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="animalCategory">Categoria (opcional)</label>
+                <select id="animalCategory" name="animalCategory">
+                  <option value="">Não informada</option>
+                  <option>Bezerro(a)</option>
+                  <option>Novilho(a)</option>
+                  <option>Garrote</option>
+                  <option>Novilha</option>
+                  <option>Vaca</option>
+                  <option>Reprodutor</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="animalNotes">Observações (opcional)</label>
+                <input id="animalNotes" name="animalNotes" maxlength="180" placeholder="Alguma informação importante sobre o animal">
+              </div>
+            </div>
+
+            <div class="notice" style="margin-top:17px">
+              <span class="notice-icon">📷</span>
+              <div>
+                <strong>Fotografia vinculada ao cadastro</strong>
+                A imagem desta pesagem será guardada junto com o animal.
+                O peso ficará marcado como não calculado enquanto o modelo
+                de análise não estiver disponível.
+              </div>
+            </div>
+
+            <div class="registration-actions">
+              <button class="primary-button" type="submit">
+                Salvar cadastro e registro →
+              </button>
+              <button class="soft-button" type="button" id="cancelRegistrationButton">
+                Voltar para a foto
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- REBANHO -->
+      <section class="view" id="view-rebanho">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h3>Meu rebanho</h3>
+            <p>Animais cadastrados depois da etapa de pesagem.</p>
+          </div>
+          <button class="soft-button" data-go="pesar">＋ Cadastrar animal</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-wrap">
+            <input class="search-input" id="herdSearch" placeholder="Buscar por nome ou identificação...">
+          </div>
+          <button class="soft-button" id="exportJsonButton">↓ Baixar backup</button>
+        </div>
+
+        <div class="animal-grid" id="animalGrid"></div>
+      </section>
+
+      <!-- HISTÓRICO -->
+      <section class="view" id="view-historico">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h3>Histórico de pesagens</h3>
+            <p>Consulte as fotografias e os resultados registrados.</p>
+          </div>
+          <button class="soft-button" id="exportCsvButton">↓ Baixar relatório</button>
+        </div>
+
+        <div class="notice" style="margin-bottom:17px">
+          <span class="notice-icon">ℹ️</span>
+          <div>
+            <strong>Transparência dos resultados</strong>
+            Os registros sem peso calculado aparecem como pendentes.
+            Um valor em quilos só será exibido quando houver uma análise
+            feita por um modelo adequado.
+          </div>
+        </div>
+
+        <div class="record-list" id="historyList"></div>
+      </section>
+
+      <!-- MANEJO -->
+      <section class="view" id="view-manejo">
+        <div class="section-heading" style="margin-top:0">
+          <div>
+            <h3>Manejo e cuidados</h3>
+            <p>Organize tarefas e lembretes da propriedade.</p>
+          </div>
+        </div>
+
+        <div class="care-grid">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>Seus lembretes</h3>
+              <span id="reminderCountLabel">0 pendentes</span>
+            </div>
+            <div class="reminder-list" id="reminderList"></div>
+          </div>
+
+          <div class="panel form-panel">
+            <h3>Novo lembrete</h3>
+            <p>
+              Registre tarefas de manejo, vacinação, vermifugação,
+              alimentação ou acompanhamento veterinário.
+            </p>
+
+            <form id="reminderForm">
+              <div class="field">
+                <label for="reminderTitle">O que precisa ser feito?</label>
+                <input id="reminderTitle" required maxlength="90" placeholder="Ex.: Agendar visita do veterinário">
+              </div>
+
+              <div class="field">
+                <label for="reminderDate">Data</label>
+                <input id="reminderDate" type="date" required>
+              </div>
+
+              <div class="field">
+                <label for="reminderAnimal">Animal (opcional)</label>
+                <select id="reminderAnimal">
+                  <option value="">Todo o rebanho</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="reminderType">Tipo de cuidado</label>
+                <select id="reminderType">
+                  <option>Manejo geral</option>
+                  <option>Vacinação</option>
+                  <option>Vermifugação</option>
+                  <option>Alimentação</option>
+                  <option>Consulta veterinária</option>
+                  <option>Nova pesagem</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+
+              <button class="primary-button button-full" type="submit">
+                ＋ Salvar lembrete
+              </button>
+            </form>
+
+            <div class="small-footnote">
+              Os lembretes servem para organização. Vacinas, medicamentos
+              e doses devem ser definidos com orientação de um médico-veterinário.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
-  <div class="ads-consent-actions">
-    <button id="rejectAdsCookies" class="secondary-button" type="button">Recusar</button>
-    <button id="acceptAdsCookies" class="primary-button" type="button">Aceitar publicidade</button>
-  </div>
-</section>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="monetization-config.js?v=3.19"></script>
-<script src="monetization.js?v=3.19" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js" defer></script>
-<script src="morphometry.js?v=3.19" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/geotiff@2.1.3/dist-browser/geotiff.js" defer></script>
-<script src="agro-gps.js?v=3.19" defer></script>
-<script src="app.js?v=3.19" defer></script>
-<script src="agro-services.js?v=3.19" defer></script>
-<script src="integration-manager.js?v=3.19" defer></script>
+
+  <!-- MENU INFERIOR PARA CELULAR -->
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <button class="active" data-view="inicio"><span>⌂</span><span>Início</span></button>
+    <button data-view="pesar"><span>📷</span><span>Pesar</span></button>
+    <button data-view="rebanho"><span>🐄</span><span>Rebanho</span></button>
+    <button data-view="historico"><span>▤</span><span>Histórico</span></button>
+    <button data-view="manejo"><span>🌿</span><span>Manejo</span></button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    /*
+      PesaBoi — protótipo em arquivo único.
+
+      IMPORTANTE:
+      Este arquivo não contém um modelo de inteligência artificial
+      treinado para estimar peso bovino. Ele captura e organiza fotos,
+      mas não calcula peso a partir de pixels. Não inventa resultados.
+    */
+
+    const STORAGE_KEY = "pesaboi_dados_v1";
+
+    const pageInfo = {
+      inicio: {
+        title: "Bem-vindo ao PesaBoi",
+        description: "Vamos cuidar do seu rebanho?"
+      },
+      pesar: {
+        title: "Pesagem por fotografia",
+        description: "Fotografe primeiro. O cadastro vem depois da tentativa de análise."
+      },
+      rebanho: {
+        title: "Meu rebanho",
+        description: "Consulte os animais cadastrados."
+      },
+      historico: {
+        title: "Histórico",
+        description: "Acompanhe os registros e as fotografias."
+      },
+      manejo: {
+        title: "Manejo e cuidados",
+        description: "Organize as tarefas da propriedade."
+      }
+    };
+
+    let appData = loadData();
+    let currentStream = null;
+    let currentPhoto = "";
+    let analysisReady = false;
+    let toastTimer = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) {
+          return { animals: [], weighings: [], reminders: [] };
+        }
+
+        const parsed = JSON.parse(saved);
+
+        return {
+          animals: Array.isArray(parsed.animals) ? parsed.animals : [],
+          weighings: Array.isArray(parsed.weighings) ? parsed.weighings : [],
+          reminders: Array.isArray(parsed.reminders) ? parsed.reminders : []
+        };
+      } catch (error) {
+        console.error("Não foi possível ler os dados locais:", error);
+        return { animals: [], weighings: [], reminders: [] };
+      }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        return true;
+      } catch (error) {
+        console.error("Não foi possível salvar os dados:", error);
+        showToast("O armazenamento está cheio. Tente usar uma foto menor ou baixar um backup.");
+        return false;
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]);
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) return "Data não informada";
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "Data não informada";
+      return date.toLocaleDateString("pt-BR");
+    }
+
+    function formatDateTime(dateValue) {
+      if (!dateValue) return "Data não informada";
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "Data não informada";
+      return date.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function makeId(prefix) {
+      return prefix + "_" + Date.now().toString(36) + "_" +
+        Math.random().toString(36).slice(2, 8);
+    }
+
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3600);
+    }
+
+    function showView(viewName) {
+      if (!pageInfo[viewName]) return;
+
+      stopCamera();
+
+      document.querySelectorAll(".view").forEach((view) => {
+        view.classList.toggle("active", view.id === "view-" + viewName);
+      });
+
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === viewName);
+      });
+
+      $("pageTitle").textContent = pageInfo[viewName].title;
+      $("pageDescription").textContent = pageInfo[viewName].description;
+
+      if (viewName === "inicio") renderDashboard();
+      if (viewName === "rebanho") renderAnimals();
+      if (viewName === "historico") renderHistory();
+      if (viewName === "manejo") renderReminders();
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => showView(button.dataset.view));
+    });
+
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => showView(button.dataset.go));
+    });
+
+    $("todayLabel").textContent = new Date().toLocaleDateString("pt-BR", {
+      weekday: "short",
+      day: "2-digit",
+      month: "long"
+    });
+
+    // --------------------------
+    // CÂMERA E FOTOGRAFIA
+    // --------------------------
+
+    async function startCamera() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast("A câmera não está disponível neste navegador. Escolha uma foto do dispositivo.");
+        $("photoFileInput").click();
+        return;
+      }
+
+      stopCamera();
+
+      try {
+        currentStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 900 }
+          },
+          audio: false
+        });
+
+        const video = $("cameraVideo");
+        video.srcObject = currentStream;
+        video.classList.remove("hidden");
+        $("cameraPlaceholder").classList.add("hidden");
+        $("photoPreview").classList.add("hidden");
+        $("frameGuide").classList.remove("hidden");
+        $("captureButton").classList.remove("hidden");
+        $("startCameraButton").classList.add("hidden");
+        $("retakeButton").classList.add("hidden");
+        $("photoReady").classList.remove("visible");
+        $("analyzeButton").classList.add("hidden");
+        $("analysisBox").classList.remove("visible");
+        $("registrationBox").classList.remove("visible");
+
+        currentPhoto = "";
+        analysisReady = false;
+      } catch (error) {
+        console.error("Erro ao abrir câmera:", error);
+        showToast("Não foi possível abrir a câmera. Confira a permissão ou escolha uma foto.");
+      }
+    }
+
+    function stopCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach((track) => track.stop());
+        currentStream = null;
+      }
+
+      const video = $("cameraVideo");
+      if (video) {
+        video.pause();
+        video.srcObject = null;
+        video.classList.add("hidden");
+      }
+
+      if ($("captureButton")) {
+        $("captureButton").classList.add("hidden");
+      }
+    }
+
+    function canvasToPhoto(canvas) {
+      return canvas.toDataURL("image/jpeg", 0.78);
+    }
+
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        if (!file || !file.type.startsWith("image/")) {
+          reject(new Error("Selecione um arquivo de imagem."));
+          return;
+        }
+
+        const imageUrl = URL.createObjectURL(file);
+        const image = new Image();
+
+        image.onload = () => {
+          try {
+            const maxSide = 1500;
+            const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+            const width = Math.max(1, Math.round(image.width * scale));
+            const height = Math.max(1, Math.round(image.height * scale));
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, width, height);
+
+            const result = canvasToPhoto(canvas);
+            URL.revokeObjectURL(imageUrl);
+            resolve(result);
+          } catch (error) {
+            URL.revokeObjectURL(imageUrl);
+            reject(error);
+          }
+        };
+
+        image.onerror = () => {
+          URL.revokeObjectURL(imageUrl);
+          reject(new Error("Não foi possível abrir esta imagem."));
+        };
+
+        image.src = imageUrl;
+      });
+    }
+
+    function showPhoto(photoData) {
+      currentPhoto = photoData;
+      analysisReady = false;
+
+      stopCamera();
+
+      $("cameraPlaceholder").classList.add("hidden");
+      $("cameraVideo").classList.add("hidden");
+      $("photoPreview").src = photoData;
+      $("photoPreview").classList.remove("hidden");
+      $("frameGuide").classList.add("hidden");
+
+      $("startCameraButton").classList.add("hidden");
+      $("captureButton").classList.add("hidden");
+      $("retakeButton").classList.remove("hidden");
+      $("photoReady").classList.add("visible");
+      $("analyzeButton").classList.remove("hidden");
+
+      $("analysisBox").classList.remove("visible");
+      $("analysisLoading").classList.remove("visible");
+      $("registrationBox").classList.remove("visible");
+    }
+
+    $("startCameraButton").addEventListener("click", startCamera);
+
+    $("captureButton").addEventListener("click", () => {
+      const video = $("cameraVideo");
+
+      if (!currentStream || !video.videoWidth || !video.videoHeight) {
+        showToast("A câmera ainda está iniciando. Tente novamente.");
+        return;
+      }
+
+      const maxSide = 1500;
+      const scale = Math.min(1, maxSide / Math.max(video.videoWidth, video.videoHeight));
+      const canvas = document.createElement("canvas");
+
+      canvas.width = Math.round(video.videoWidth * scale);
+      canvas.height = Math.round(video.videoHeight * scale);
+
+      const context = canvas.getContext("2d");
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      showPhoto(canvasToPhoto(canvas));
+    });
+
+    $("photoFileInput").addEventListener("change", async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      try {
+        const compressed = await compressImageFile(file);
+        showPhoto(compressed);
+        showToast("Fotografia carregada com sucesso.");
+      } catch (error) {
+        console.error(error);
+        showToast(error.message || "Não foi possível carregar a fotografia.");
+      }
+
+      event.target.value = "";
+    });
+
+    $("retakeButton").addEventListener("click", () => {
+      currentPhoto = "";
+      analysisReady = false;
+
+      $("photoPreview").classList.add("hidden");
+      $("photoPreview").removeAttribute("src");
+      $("cameraPlaceholder").classList.remove("hidden");
+      $("frameGuide").classList.add("hidden");
+      $("startCameraButton").classList.remove("hidden");
+      $("retakeButton").classList.add("hidden");
+      $("photoReady").classList.remove("visible");
+      $("analyzeButton").classList.add("hidden");
+      $("analysisBox").classList.remove("visible");
+      $("analysisLoading").classList.remove("visible");
+      $("registrationBox").classList.remove("visible");
+    });
+
+    // --------------------------
+    // TENTATIVA DE ANÁLISE
+    // --------------------------
+
+    $("analyzeButton").addEventListener("click", () => {
+      if (!currentPhoto) {
+        showToast("Primeiro tire ou escolha uma fotografia.");
+        return;
+      }
+
+      $("analyzeButton").classList.add("hidden");
+      $("analysisBox").classList.add("visible");
+      $("analysisResult").classList.remove("visible");
+      $("analysisLoading").classList.add("visible");
+      $("registrationBox").classList.remove("visible");
+
+      /*
+        Esta etapa apenas confirma que a imagem foi carregada.
+        Ela NÃO estima o peso e NÃO executa inteligência artificial.
+        O pequeno intervalo serve somente para a transição visual.
+      */
+      setTimeout(() => {
+        $("analysisLoading").classList.remove("visible");
+        $("analysisResult").classList.add("visible");
+        analysisReady = true;
+
+        $("analysisBox").scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }, 900);
+    });
+
+    $("openRegistrationButton").addEventListener("click", () => {
+      if (!analysisReady || !currentPhoto) {
+        showToast("Primeiro faça a fotografia e a tentativa de análise.");
+        return;
+      }
+
+      $("registrationBox").classList.add("visible");
+      $("registrationBox").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      $("animalName").focus();
+    });
+
+    $("cancelRegistrationButton").addEventListener("click", () => {
+      $("registrationBox").classList.remove("visible");
+      $("analysisBox").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+
+    // --------------------------
+    // SALVAR CADASTRO APÓS FOTO
+    // --------------------------
+
+    $("animalForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!analysisReady || !currentPhoto) {
+        showToast("A fotografia precisa ser recebida antes do cadastro.");
+        return;
+      }
+
+      const name = $("animalName").value.trim();
+      const tag = $("animalTag").value.trim();
+
+      if (!name && !tag) {
+        showToast("Informe o nome ou o número de identificação do animal.");
+        $("animalName").focus();
+        return;
+      }
+
+      const nextNumber = appData.animals.length + 1;
+      const animal = {
+        id: makeId("animal"),
+        code: "PB-" + String(nextNumber).padStart(4, "0"),
+        name: name || "Animal " + String(nextNumber).padStart(3, "0"),
+        tag,
+        breed: $("animalBreed").value,
+        size: $("animalSize").value,
+        sex: $("animalSex").value,
+        category: $("animalCategory").value,
+        notes: $("animalNotes").value.trim(),
+        photo: currentPhoto,
+        createdAt: new Date().toISOString()
+      };
+
+      const weighing = {
+        id: makeId("weighing"),
+        animalId: animal.id,
+        date: new Date().toISOString(),
+        weight: null,
+        status: "pending_model",
+        note: "Peso não calculado: modelo de análise não conectado."
+      };
+
+      appData.animals.unshift(animal);
+      appData.weighings.unshift(weighing);
+
+      if (!saveData()) {
+        appData.animals.shift();
+        appData.weighings.shift();
+        return;
+      }
+
+      $("animalForm").reset();
+      resetWeighingFlow();
+
+      renderDashboard();
+      showView("rebanho");
+      showToast("Cadastro salvo! A fotografia ficou vinculada ao animal.");
+    });
+
+    function resetWeighingFlow() {
+      stopCamera();
+
+      currentPhoto = "";
+      analysisReady = false;
+
+      $("photoPreview").classList.add("hidden");
+      $("photoPreview").removeAttribute("src");
+      $("cameraPlaceholder").classList.remove("hidden");
+      $("frameGuide").classList.add("hidden");
+
+      $("startCameraButton").classList.remove("hidden");
+      $("captureButton").classList.add("hidden");
+      $("retakeButton").classList.add("hidden");
+      $("photoReady").classList.remove("visible");
+      $("analyzeButton").classList.add("hidden");
+
+      $("analysisBox").classList.remove("visible");
+      $("analysisLoading").classList.remove("visible");
+      $("analysisResult").classList.remove("visible");
+      $("registrationBox").classList.remove("visible");
+    }
+
+    // --------------------------
+    // PAINEL INICIAL
+    // --------------------------
+
+    function getValidWeights() {
+      return appData.weighings
+        .filter((item) => Number.isFinite(Number(item.weight)) && item.weight !== null)
+        .map((item) => Number(item.weight));
+    }
+
+    function renderDashboard() {
+      const validWeights = getValidWeights();
+      const average = validWeights.length
+        ? validWeights.reduce((sum, value) => sum + value, 0) / validWeights.length
+        : null;
+
+      $("metricAnimals").textContent = appData.animals.length;
+      $("metricWeighings").textContent = validWeights.length;
+      $("metricAverage").textContent = average === null
+        ? "—"
+        : Math.round(average).toLocaleString("pt-BR") + " kg";
+
+      $("metricReminders").textContent =
+        appData.reminders.filter((item) => !item.done).length;
+
+      const recent = appData.weighings.slice(0, 4);
+
+      if (!recent.length) {
+        $("recentActivity").innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">📷</span>
+            <strong>Nenhuma pesagem registrada</strong>
+            <p>Quando você fotografar e cadastrar um animal, o registro aparecerá aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      $("recentActivity").innerHTML = `
+        <div class="record-list">
+          ${recent.map((item) => {
+            const animal = appData.animals.find((entry) => entry.id === item.animalId);
+            const label = animal ? animal.name : "Animal não encontrado";
+            const hasWeight = Number.isFinite(Number(item.weight)) && item.weight !== null;
+
+            return `
+              <div class="record-item">
+                <div class="record-avatar">🐂</div>
+                <div class="record-main">
+                  <strong>${escapeHtml(label)}</strong>
+                  <span>${formatDateTime(item.date)}</span>
+                </div>
+                <div class="record-value">
+                  ${hasWeight ? Number(item.weight).toLocaleString("pt-BR") + " kg" : "Aguardando modelo"}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    // --------------------------
+    // REBANHO
+    // --------------------------
+
+    function renderAnimals(searchTerm = "") {
+      const term = searchTerm.trim().toLocaleLowerCase("pt-BR");
+
+      const animals = appData.animals.filter((animal) => {
+        const searchable = [
+          animal.name,
+          animal.tag,
+          animal.code,
+          animal.breed
+        ].join(" ").toLocaleLowerCase("pt-BR");
+
+        return searchable.includes(term);
+      });
+
+      const grid = $("animalGrid");
+
+      if (!animals.length) {
+        grid.innerHTML = `
+          <div class="panel" style="grid-column:1/-1">
+            <div class="empty-state">
+              <span class="empty-icon">🐄</span>
+              <strong>${term ? "Nenhum animal encontrado" : "Seu rebanho ainda está vazio"}</strong>
+              <p>
+                ${term
+                  ? "Experimente buscar por outro nome ou número."
+                  : "Para cadastrar, inicie uma pesagem por fotografia. O cadastro aparecerá depois da tentativa de análise."}
+              </p>
+              ${term ? "" : '<button class="primary-button" data-go="pesar" style="margin-top:14px">Iniciar pesagem →</button>'}
+            </div>
+          </div>
+        `;
+
+        const goButton = grid.querySelector("[data-go]");
+        if (goButton) {
+          goButton.addEventListener("click", () => showView("pesar"));
+        }
+        return;
+      }
+
+      grid.innerHTML = animals.map((animal) => {
+        const photo = animal.photo
+          ? `<img src="${animal.photo}" alt="Foto de ${escapeHtml(animal.name)}">`
+          : "🐂";
+
+        const details = [
+          animal.tag ? "Identificação: " + escapeHtml(animal.tag) : "",
+          animal.breed ? "Raça: " + escapeHtml(animal.breed) : "",
+          animal.sex ? "Sexo: " + escapeHtml(animal.sex) : "",
+          animal.size ? "Porte: " + escapeHtml(animal.size) : ""
+        ].filter(Boolean).join("<br>");
+
+        return `
+          <article class="animal-card">
+            <div class="animal-photo">${photo}</div>
+            <div class="animal-card-content">
+              <h3>${escapeHtml(animal.name)}</h3>
+              <div class="animal-meta">
+                ${escapeHtml(animal.code)}<br>
+                ${details || "Sem outros dados informados"}
+              </div>
+              <span class="animal-status">Peso ainda não calculado</span>
+              <div class="animal-actions">
+                <button type="button" data-reweigh="${animal.id}">Nova foto</button>
+                <button type="button" data-delete-animal="${animal.id}">Excluir</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      grid.querySelectorAll("[data-reweigh]").forEach((button) => {
+        button.addEventListener("click", () => {
+          resetWeighingFlow();
+          showView("pesar");
+          showToast("Faça uma nova fotografia do animal. O novo registro será associado após o cadastro.");
+        });
+      });
+
+      grid.querySelectorAll("[data-delete-animal]").forEach((button) => {
+        button.addEventListener("click", () => deleteAnimal(button.dataset.deleteAnimal));
+      });
+    }
+
+    $("herdSearch").addEventListener("input", (event) => {
+      renderAnimals(event.target.value);
+    });
+
+    function deleteAnimal(animalId) {
+      const animal = appData.animals.find((item) => item.id === animalId);
+      if (!animal) return;
+
+      const confirmed = confirm(
+        "Deseja excluir " + animal.name + " e os registros de pesagem associados?"
+      );
+
+      if (!confirmed) return;
+
+      const oldAnimals = appData.animals;
+      const oldWeighings = appData.weighings;
+
+      appData.animals = appData.animals.filter((item) => item.id !== animalId);
+      appData.weighings = appData.weighings.filter((item) => item.animalId !== animalId);
+
+      if (!saveData()) {
+        appData.animals = oldAnimals;
+        appData.weighings = oldWeighings;
+        return;
+      }
+
+      renderAnimals($("herdSearch").value);
+      renderDashboard();
+      showToast("Animal e registros associados excluídos.");
+    }
+
+    // --------------------------
+    // HISTÓRICO
+    // --------------------------
+
+    function renderHistory() {
+      const list = $("historyList");
+
+      if (!appData.weighings.length) {
+        list.innerHTML = `
+          <div class="panel">
+            <div class="empty-state">
+              <span class="empty-icon">📋</span>
+              <strong>Seu histórico está vazio</strong>
+              <p>As fotografias e os registros aparecerão aqui depois que você concluir o cadastro de um animal.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = appData.weighings.map((item) => {
+        const animal = appData.animals.find((entry) => entry.id === item.animalId);
+        const name = animal ? animal.name : "Animal removido";
+        const hasWeight = Number.isFinite(Number(item.weight)) && item.weight !== null;
+
+        return `
+          <div class="record-item">
+            <div class="record-avatar">⚖️</div>
+            <div class="record-main">
+              <strong>${escapeHtml(name)}</strong>
+              <span>${formatDateTime(item.date)}</span>
+            </div>
+            <div class="record-value">
+              ${hasWeight
+                ? Number(item.weight).toLocaleString("pt-BR") + " kg"
+                : "Peso não calculado"}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // --------------------------
+    // MANEJO E LEMBRETES
+    // --------------------------
+
+    function renderReminderAnimalOptions() {
+      const select = $("reminderAnimal");
+      const selected = select.value;
+
+      select.innerHTML = '<option value="">Todo o rebanho</option>' +
+        appData.animals.map((animal) =>
+          `<option value="${animal.id}">${escapeHtml(animal.name)}</option>`
+        ).join("");
+
+      if (appData.animals.some((animal) => animal.id === selected)) {
+        select.value = selected;
+      }
+    }
+
+    function renderReminders() {
+      renderReminderAnimalOptions();
+
+      const pending = appData.reminders.filter((item) => !item.done).length;
+      $("reminderCountLabel").textContent = pending + " pendentes";
+
+      const list = $("reminderList");
+
+      if (!appData.reminders.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">🌿</span>
+            <strong>Nenhum lembrete cadastrado</strong>
+            <p>Adicione uma tarefa para organizar os cuidados da propriedade.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sorted = [...appData.reminders].sort((a, b) => {
+        return String(a.date).localeCompare(String(b.date));
+      });
+
+      list.innerHTML = sorted.map((item) => {
+        const animal = appData.animals.find((entry) => entry.id === item.animalId);
+        const animalLabel = animal ? " · " + animal.name : "";
+
+        return `
+          <label class="reminder-item ${item.done ? "done" : ""}">
+            <input type="checkbox" data-reminder-check="${item.id}" ${item.done ? "checked" : ""}>
+            <span class="reminder-text">
+              <strong>${escapeHtml(item.title)}</strong>
+              <span>${escapeHtml(item.type)} · ${formatDate(item.date)}${escapeHtml(animalLabel)}</span>
+            </span>
+          </label>
+        `;
+      }).join("");
+
+      list.querySelectorAll("[data-reminder-check]").forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const item = appData.reminders.find((entry) => entry.id === checkbox.dataset.reminderCheck);
+          if (!item) return;
+
+          item.done = checkbox.checked;
+          saveData();
+          renderReminders();
+          renderDashboard();
+        });
+      });
+    }
+
+    $("reminderForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const title = $("reminderTitle").value.trim();
+      const date = $("reminderDate").value;
+
+      if (!title || !date) {
+        showToast("Preencha a tarefa e a data.");
+        return;
+      }
+
+      const reminder = {
+        id: makeId("reminder"),
+        title,
+        date,
+        animalId: $("reminderAnimal").value,
+        type: $("reminderType").value,
+        done: false,
+        createdAt: new Date().toISOString()
+      };
+
+      appData.reminders.push(reminder);
+
+      if (!saveData()) {
+        appData.reminders.pop();
+        return;
+      }
+
+      $("reminderForm").reset();
+      renderReminders();
+      renderDashboard();
+      showToast("Lembrete salvo.");
+    });
+
+    $("reminderDate").min = new Date().toISOString().slice(0, 10);
+
+    // --------------------------
+    // EXPORTAÇÃO E BACKUP
+    // --------------------------
+
+    function downloadFile(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    $("exportJsonButton").addEventListener("click", () => {
+      const content = JSON.stringify({
+        application: "PesaBoi",
+        exportedAt: new Date().toISOString(),
+        data: appData
+      }, null, 2);
+
+      downloadFile(
+        "backup-pesaboi.json",
+        content,
+        "application/json;charset=utf-8"
+      );
+
+      showToast("Backup preparado para baixar.");
+    });
+
+    $("exportCsvButton").addEventListener("click", () => {
+      const rows = [
+        ["Animal", "Identificação", "Data", "Peso (kg)", "Situação"]
+      ];
+
+      appData.weighings.forEach((item) => {
+        const animal = appData.animals.find((entry) => entry.id === item.animalId);
+        const hasWeight = Number.isFinite(Number(item.weight)) && item.weight !== null;
+
+        rows.push([
+          animal ? animal.name : "Animal removido",
+          animal ? animal.tag : "",
+          formatDateTime(item.date),
+          hasWeight ? item.weight : "",
+          hasWeight ? "Peso calculado" : "Aguardando modelo validado"
+        ]);
+      });
+
+      const csv = rows.map((row) =>
+        row.map((value) => '"' + String(value ?? "").replace(/"/g, '""') + '"').join(";")
+      ).join("\r\n");
+
+      downloadFile(
+        "relatorio-pesaboi.csv",
+        "\uFEFF" + csv,
+        "text/csv;charset=utf-8"
+      );
+
+      showToast("Relatório preparado para baixar.");
+    });
+
+    // --------------------------
+    // INSTRUÇÕES POR VOZ
+    // --------------------------
+
+    $("voiceButton").addEventListener("click", () => {
+      if (!("speechSynthesis" in window)) {
+        showToast("A leitura por voz não está disponível neste navegador.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const text = [
+        "Bem-vindo ao PesaBoi.",
+        "Para iniciar, toque em Pesar.",
+        "Primeiro, abra a câmera e fotografe o boi inteiro, de lado, em um local iluminado.",
+        "Depois, confira a fotografia e continue para a tentativa de análise.",
+        "O cadastro do animal aparece somente depois dessa etapa.",
+        "Não é necessário informar medidas do corpo."
+      ].join(" ");
+
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = "pt-BR";
+      speech.rate = 0.94;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(speech);
+    });
+
+    // --------------------------
+    // INICIALIZAÇÃO
+    // --------------------------
+
+    function initializeApp() {
+      renderDashboard();
+      renderAnimals();
+      renderHistory();
+      renderReminders();
+    }
+
+    initializeApp();
+
+    window.addEventListener("beforeunload", stopCamera);
+  </script>
 </body>
 </html>
